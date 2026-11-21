@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F4F6F8">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="KosaKata">
+<meta name="description" content="Kamus & latihan kosakata Bahasa Inggris - Indonesia">
+<title>KosaKata — Kamus Inggris ⇄ Indonesia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+  // Terapkan tema secepat mungkin agar tidak "berkedip"
+  try {
+    var s = JSON.parse(localStorage.getItem('kosakata.settings') || '{}');
+    var t = s.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+</script>
+<style>
+:root{
+  --bg:#F4F6F8; --surface:#FFFFFF; --surface-2:#EDF1F4; --text:#0E1A24; --muted:#5B6B78; --line:#E1E7EB;
+  --primary:#0F766E; --primary-ink:#FFFFFF; --primary-soft:#DCF3EF; --accent:#F59E0B; --accent-soft:#FEF3C7;
+  --danger:#DC2626; --danger-soft:#FDE8E8; --ok:#15803D; --ok-soft:#DCFCE7;
+  --shadow:0 1px 2px rgba(14,26,36,.05),0 6px 18px rgba(14,26,36,.05);
+  --radius:16px; --nav-h:64px; --bar-h:58px;
+  --ipa:"Charis SIL","Doulos SIL","Gentium Plus","Noto Sans","Segoe UI",Roboto,system-ui,sans-serif;
+}
+[data-theme=dark]{
+  --bg:#0B1117; --surface:#131B23; --surface-2:#1B252F; --text:#E7EDF1; --muted:#8C9DAA; --line:#232F3A;
+  --primary:#2DD4BF; --primary-ink:#042420; --primary-soft:#11312D; --accent:#FBBF24; --accent-soft:#3A2E10;
+  --danger:#F87171; --danger-soft:#3A1717; --ok:#4ADE80; --ok-soft:#123020;
+  --shadow:none;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.45;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;min-height:100vh;min-height:100dvh;transition:background .25s,color .25s}
+button,input,select{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer;touch-action:manipulation}
+button:disabled{opacity:.4;cursor:default}
+a{color:inherit;text-decoration:none}
+svg{flex:none}
+[hidden]{display:none!important}
+
+/* ---------- App bar ---------- */
+.appbar{position:sticky;top:0;z-index:40;padding-top:env(safe-area-inset-top);background:var(--bg);background:color-mix(in srgb,var(--bg) 86%,transparent);-webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px)}
+.bar-inner{max-width:560px;margin:0 auto;height:var(--bar-h);display:flex;align-items:center;gap:6px;padding:0 10px 0 14px}
+.brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--primary);color:var(--primary-ink);display:grid;place-items:center;font-weight:800;font-size:15px;letter-spacing:-.02em;position:relative;flex:none}
+.logo:after{content:"";position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.brand-txt{min-width:0}
+.brand-txt b{display:block;font-size:17px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-txt small{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:-1px}
+.acc-pill{height:36px;padding:0 12px 0 8px;border-radius:999px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700}
+.acc-pill .lbl{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.icon-btn{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--muted);transition:background .15s,color .15s,transform .1s}
+.icon-btn:active{background:var(--surface-2);transform:scale(.94)}
+.icon-btn svg{width:22px;height:22px}
+#btn-back{color:var(--text);margin-left:-8px}
+
+/* ---------- Layout ---------- */
+main{max-width:560px;margin:0 auto;padding:4px 16px calc(var(--nav-h) + env(safe-area-inset-bottom) + 28px)}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary)}
+.muted{color:var(--muted)}
+.hint{font-size:13px;color:var(--muted);margin-top:8px}
+.center{text-align:center}
+.sec-title{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;margin:22px 2px 10px;letter-spacing:-.01em}
+.sec-title small{margin-left:auto;font-size:12px;font-weight:600;color:var(--muted);background:var(--surface-2);padding:2px 8px;border-radius:999px}
+.hero{padding:8px 2px 4px}
+.hero h1{font-size:24px;line-height:1.2;font-weight:800;letter-spacing:-.03em;margin-top:4px}
+
+/* ---------- Search ---------- */
+.search{position:sticky;top:calc(var(--bar-h) + env(safe-area-inset-top));z-index:20;padding:10px 0 12px;background:var(--bg)}
+.search-field,.filter-field{display:flex;align-items:center;gap:10px;height:54px;padding:0 6px 0 16px;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;box-shadow:var(--shadow);transition:border-color .15s}
+.search-field:focus-within,.filter-field:focus-within{border-color:var(--primary)}
+.search-field>svg,.filter-field>svg{width:20px;height:20px;color:var(--muted)}
+.search-field input,.filter-field input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:16px;height:100%}
+.search-field input::-webkit-search-cancel-button,.filter-field input::-webkit-search-cancel-button{display:none}
+.filter-field{height:48px;margin-bottom:4px;box-shadow:none}
+.res-meta{font-size:13px;color:var(--muted);margin:0 2px 10px}
+mark{background:var(--accent-soft);color:inherit;border-radius:3px;padding:0 1px}
+
+/* ---------- Cards ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.wod{padding:18px;position:relative;overflow:hidden;margin-top:6px;background:linear-gradient(135deg,var(--primary) 0%,color-mix(in srgb,var(--primary) 70%,#0B3B66) 100%);color:#fff;border:0}
+[data-theme=dark] .wod{color:var(--primary-ink)}
+.wod:before{content:"Aa";position:absolute;right:-6px;bottom:-34px;font-size:120px;font-weight:800;opacity:.09;letter-spacing:-.06em}
+.wod .eyebrow{color:inherit;opacity:.85}
+.wod-en{font-size:30px;font-weight:800;letter-spacing:-.03em;margin-top:6px;line-height:1.1}
+.wod-ipa{font-family:var(--ipa);opacity:.9;margin-top:4px}
+.wod-ar{font-size:17px;font-weight:600;margin-top:8px}
+.wod-ex{font-size:14px;opacity:.85;margin-top:6px;font-style:italic}
+.wod-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.wod-actions .chip-btn{white-space:nowrap}
+.wod .chip-btn{background:rgba(255,255,255,.18);color:inherit}
+[data-theme=dark] .wod .chip-btn{background:rgba(0,0,0,.14)}
+.chip-btn{height:38px;padding:0 14px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;background:var(--surface-2)}
+.chip-btn svg{width:18px;height:18px}
+.chip-btn.on svg{fill:currentColor}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.stat{padding:12px 12px 10px;text-align:left}
+.stat b{display:block;font-size:22px;font-weight:800;letter-spacing:-.02em}
+.stat span{font-size:12px;color:var(--muted);font-weight:600}
+
+.group-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.group-tile{padding:14px;display:flex;flex-direction:column;gap:10px;min-height:112px;background:var(--surface);background:color-mix(in srgb,var(--gc) 9%,var(--surface));border-color:color-mix(in srgb,var(--gc) 20%,var(--line));transition:transform .1s}
+.group-tile:active{transform:scale(.98)}
+.group-tile .gi{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:21px;background:var(--surface);background:color-mix(in srgb,var(--gc) 18%,var(--surface))}
+.group-tile b{font-size:14.5px;line-height:1.25;font-weight:700}
+.group-tile small{font-size:12px;color:var(--muted);font-weight:600;margin-top:auto}
+
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quick-btn{padding:14px;display:flex;align-items:center;gap:10px;text-align:left;font-weight:700;font-size:14px}
+.quick-btn .qi{font-size:22px}
+.quick-btn small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+
+.install{display:flex;align-items:center;gap:12px;padding:12px 12px 12px 14px;margin-top:12px;border-style:dashed}
+.install p{flex:1;font-size:13.5px}
+.install p b{display:block;font-size:14px}
+
+/* ---------- Chips ---------- */
+.chips-wrap{position:sticky;top:calc(var(--bar-h) + env(safe-area-inset-top));z-index:15;background:var(--bg);padding:6px 0 10px;margin:0 -16px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;height:38px;padding:0 14px;display:flex;align-items:center;gap:6px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:14px;font-weight:600;white-space:nowrap}
+.chip.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+
+/* ---------- Category list ---------- */
+.cat-list{display:flex;flex-direction:column;gap:8px}
+.cat-row{display:flex;align-items:center;gap:12px;padding:12px 10px 12px 12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;min-height:64px;transition:transform .1s}
+.cat-row:active{transform:scale(.985);background:var(--surface-2)}
+.cat-ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:21px;flex:none;background:var(--surface-2);background:color-mix(in srgb,var(--gc) 14%,var(--surface));position:relative}
+.cat-no{position:absolute;bottom:-5px;right:-6px;min-width:20px;height:18px;padding:0 5px;border-radius:9px;background:var(--surface);border:1px solid var(--line);font-size:10px;font-weight:800;display:grid;place-items:center;color:var(--muted)}
+.cat-txt{flex:1;min-width:0}
+.cat-txt b{display:block;font-size:15px;font-weight:700;line-height:1.25}
+.cat-txt small{display:block;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cat-count{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
+.cat-row>svg{width:18px;height:18px;color:var(--muted)}
+
+/* ---------- Category detail ---------- */
+.cat-head{display:flex;gap:14px;align-items:center;padding:10px 2px 4px}
+.cat-big{width:64px;height:64px;border-radius:18px;font-size:32px;display:grid;place-items:center;flex:none;background:var(--surface-2);background:color-mix(in srgb,var(--gc) 16%,var(--surface))}
+.cat-head h1{font-size:22px;line-height:1.2;font-weight:800;letter-spacing:-.02em}
+.cat-head p.muted{font-size:13.5px;margin-top:2px}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 6px}
+.list-tools{display:flex;justify-content:space-between;align-items:center;margin:14px 2px 8px;font-size:13px;color:var(--muted)}
+.text-btn{font-size:13px;font-weight:700;color:var(--primary);padding:8px 4px}
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.pager a{padding:12px;font-size:13px;color:var(--muted);display:block}
+.pager a b{display:block;color:var(--text);font-size:14px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pager a.next{text-align:right}
+
+/* ---------- Buttons ---------- */
+.btn{height:50px;padding:0 18px;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:15px;transition:transform .1s,filter .15s}
+.btn:active:not(:disabled){transform:scale(.97)}
+.btn svg{width:20px;height:20px}
+.btn.primary{background:var(--primary);color:var(--primary-ink)}
+.btn.soft{background:var(--primary-soft);color:var(--primary)}
+.btn.ghost{background:var(--surface);border:1px solid var(--line)}
+.btn.ok{background:var(--ok-soft);color:var(--ok)}
+.btn.bad{background:var(--danger-soft);color:var(--danger)}
+.btn.block{width:100%}
+.btn.lg{height:56px;font-size:16px}
+
+/* ---------- Word card ---------- */
+.word-list{display:flex;flex-direction:column;gap:10px}
+.word{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.word-main{display:flex;gap:6px;padding:14px 8px 14px 16px;align-items:flex-start}
+.has-ex .word-main{cursor:pointer}
+.word-text{flex:1;min-width:0}
+.w-en{font-size:18px;font-weight:700;letter-spacing:-.01em;line-height:1.3;word-break:break-word}
+.w-ipa{font-family:var(--ipa);color:var(--primary);font-size:15px;margin-top:2px;word-break:break-word}
+.w-ar{margin-top:5px;font-size:15px;color:var(--text);opacity:.86}
+.w-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.w-cat,.w-more{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:600;color:var(--muted);background:var(--surface-2);padding:4px 9px;border-radius:999px}
+.w-more svg{width:14px;height:14px;transition:transform .2s}
+.word.open .w-more svg{transform:rotate(180deg)}
+.word-btns{display:flex;gap:2px}
+.speak{color:var(--primary)}
+.speak.playing{background:var(--primary-soft);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(.92)}}
+.star.on{color:var(--accent)}
+.star.on svg{fill:var(--accent)}
+.word-ex{display:none;margin:0 16px;padding:12px 0 14px;border-top:1px dashed var(--line)}
+.word.open .word-ex{display:block;animation:fade .2s}
+.word-ex p{font-size:14.5px;font-style:italic;color:var(--text);opacity:.9}
+.mini-btn{margin-top:8px;height:34px;padding:0 12px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;background:var(--primary-soft);color:var(--primary)}
+.mini-btn svg{width:16px;height:16px}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}}
+
+/* ---------- Empty ---------- */
+.empty{text-align:center;padding:48px 24px 24px}
+.empty .ei{font-size:46px}
+.empty b{display:block;font-size:17px;margin-top:10px}
+.empty p{font-size:14px;color:var(--muted);margin:6px auto 18px;max-width:290px}
+
+/* ---------- Practice setup ---------- */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode-card{padding:16px 14px;text-align:left;display:flex;flex-direction:column;gap:4px;background:var(--surface);border:2px solid var(--line);border-radius:var(--radius);transition:border-color .15s,background .15s}
+.mode-card.on{border-color:var(--primary);background:var(--primary-soft)}
+.mode-card .mi{font-size:28px;margin-bottom:4px}
+.mode-card b{font-size:16px}
+.mode-card small{font-size:12.5px;color:var(--muted);line-height:1.35}
+.select-wrap{position:relative}
+.select-wrap select{appearance:none;-webkit-appearance:none;width:100%;height:54px;padding:0 44px 0 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);font-size:15px;font-weight:600;outline:0}
+.select-wrap select:focus{border-color:var(--primary)}
+.select-wrap svg{position:absolute;right:14px;top:17px;width:20px;height:20px;pointer-events:none;color:var(--muted)}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;padding:4px;border-radius:14px;background:var(--surface-2)}
+.seg button{height:42px;border-radius:10px;font-size:14px;font-weight:700;color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.switch-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;font-weight:600;font-size:15px}
+.switch-row input{position:absolute;opacity:0;pointer-events:none}
+.switch{width:48px;height:28px;border-radius:14px;background:var(--line);position:relative;transition:background .2s;flex:none}
+.switch:after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
+.switch-row input:checked+.switch{background:var(--primary)}
+.switch-row input:checked+.switch:after{transform:translateX(20px)}
+.start-wrap{margin-top:24px}
+
+/* ---------- Session ---------- */
+.sess-top{display:flex;align-items:center;gap:12px;padding:10px 2px 14px;font-size:13px;font-weight:700;color:var(--muted)}
+.progress{flex:1;height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--primary);border-radius:4px;transition:width .3s}
+.score-pill{background:var(--ok-soft);color:var(--ok);padding:3px 10px;border-radius:999px}
+
+.flip{perspective:1200px;height:340px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .5s cubic-bezier(.3,.7,.3,1);transform-style:preserve-3d}
+.flip.flipped .flip-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
+.face.back{transform:rotateY(180deg);background:var(--primary);color:var(--primary-ink);border:0}
+.face-tag{position:absolute;top:16px;left:16px;font-size:12px;font-weight:700;color:var(--muted);background:var(--surface-2);padding:4px 10px;border-radius:999px;max-width:calc(100% - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.face.back .face-tag{background:rgba(255,255,255,.18);color:inherit}
+.face-hint{position:absolute;bottom:14px;font-size:12px;color:var(--muted)}
+.face.back .face-hint{color:inherit;opacity:.75}
+.fc-en{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1.15;word-break:break-word}
+.fc-ipa{font-family:var(--ipa);font-size:18px;color:var(--primary);margin-top:6px}
+.fc-ar{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.25}
+.fc-ex{font-size:15px;font-style:italic;opacity:.88;margin-top:14px;max-width:420px}
+.round-btn{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--primary-soft);color:var(--primary);margin-top:16px}
+.round-btn svg{width:24px;height:24px}
+.round-btn.playing{animation:pulse 1s infinite}
+.fc-nav{display:grid;grid-template-columns:56px 1fr 56px;gap:10px;margin-top:16px}
+.fc-nav .btn{padding:0}
+.fc-judge{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+
+.q-card{padding:28px 20px 22px;text-align:center;display:flex;flex-direction:column;align-items:center;position:relative;min-height:190px;justify-content:center}
+.q-card .face-tag{position:static;margin-bottom:12px}
+.q-prompt{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.2;word-break:break-word}
+.q-prompt.idn{font-size:24px}
+.q-card .round-btn{width:46px;height:46px;margin-top:12px}
+.options{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.opt{display:flex;align-items:center;gap:12px;min-height:56px;padding:10px 14px;border-radius:14px;background:var(--surface);border:1.5px solid var(--line);text-align:left;font-size:15.5px;font-weight:600;transition:transform .1s,border-color .15s,background .15s}
+.opt:active:not(:disabled){transform:scale(.985)}
+.opt-l{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--surface-2);font-size:13px;font-weight:800;color:var(--muted);flex:none}
+.opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+.opt.correct .opt-l{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--danger);background:var(--danger-soft)}
+.opt.wrong .opt-l{background:var(--danger);color:#fff}
+.opt:disabled{opacity:1}
+.feedback{margin-top:14px;padding:14px 16px;border-radius:14px;animation:fade .2s}
+.feedback.good{background:var(--ok-soft);color:var(--ok)}
+.feedback.bad{background:var(--danger-soft);color:var(--danger)}
+.feedback b{display:block;font-size:16px}
+.feedback span{font-size:14px;color:var(--text)}
+.next-wrap{position:sticky;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px);margin-top:14px}
+
+.result{text-align:center;padding:16px 4px 4px}
+.ring{width:150px;height:150px;border-radius:50%;margin:8px auto 14px;display:grid;place-items:center;background:conic-gradient(var(--primary) calc(var(--p)*1%),var(--surface-2) 0)}
+.ring div{width:122px;height:122px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:34px;font-weight:800;letter-spacing:-.03em}
+.ring small{display:block;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:0;margin-top:-6px}
+.result h2{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.result p{color:var(--muted);margin-top:4px}
+.stack{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+
+/* ---------- Bottom nav ---------- */
+.bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.bottomnav .inner{max-width:560px;margin:0 auto;height:var(--nav-h);display:grid;grid-template-columns:repeat(4,1fr)}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11.5px;font-weight:700;color:var(--muted);position:relative}
+.nav-item .pill{width:58px;height:32px;border-radius:16px;display:grid;place-items:center;transition:background .2s,color .2s;position:relative}
+.nav-item svg{width:23px;height:23px}
+.nav-item.active{color:var(--text)}
+.nav-item.active .pill{background:var(--primary-soft);color:var(--primary)}
+.badge{position:absolute;top:0;right:8px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:#1F1300;font-size:10.5px;font-weight:800;display:grid;place-items:center}
+
+/* ---------- Toast ---------- */
+#toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px);transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:60;background:var(--text);color:var(--bg);padding:11px 16px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:all .25s;max-width:calc(100% - 32px);text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (min-width:600px){ .hero h1{font-size:28px} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important;animation:none!important} }
+</style>
+</head>
+<body>
+
+<header class="appbar">
+  <div class="bar-inner">
+    <button class="icon-btn" id="btn-back" data-act="back" aria-label="Kembali" hidden></button>
+    <div class="brand">
+      <span class="logo" id="brand-logo">Aa</span>
+      <div class="brand-txt"><b id="bar-title">KosaKata</b><small id="bar-sub">Kamus Inggris ⇄ Indonesia</small></div>
+    </div>
+    <button class="acc-pill" id="btn-accent" data-act="accent" aria-label="Ganti aksen audio"></button>
+    <button class="icon-btn" id="btn-theme" data-act="theme" aria-label="Ganti mode gelap/terang"></button>
+  </div>
+</header>
+
+<main id="view"></main>
+
+<nav class="bottomnav" aria-label="Navigasi utama">
+  <div class="inner">
+    <a class="nav-item" data-tab="home" href="#/"><span class="pill" data-ic="book"></span>Kamus</a>
+    <a class="nav-item" data-tab="cats" href="#/kategori"><span class="pill" data-ic="grid"></span>Kategori</a>
+    <a class="nav-item" data-tab="fav" href="#/favorit"><span class="pill" data-ic="star"><span class="badge" id="fav-badge" hidden></span></span>Favorit</a>
+    <a class="nav-item" data-tab="practice" href="#/latihan"><span class="pill" data-ic="cards"></span>Latihan</a>
+  </div>
+</nav>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<!-- =====================================================================
+     DATA KOSAKATA
+     ---------------------------------------------------------------------
+     Cara menambah kata: cari kategori yang diinginkan (berdasarkan "no"),
+     lalu tambahkan baris baru di dalam "items" dengan format:
+
+       ["english", "/ipa/", "arti indonesia", "contoh kalimat (opsional)", "teks audio (opsional)"]
+
+     - Kolom ke-4 (contoh) & ke-5 (teks audio) boleh dihapus/dikosongkan.
+     - Teks audio dipakai jika yang dibaca TTS harus berbeda dari kolom english
+       (misalnya simbol fonetik atau rumus matematika).
+     - Kategori baru: salin satu blok { no, id, g, name, en, icon, items }.
+       "g" harus salah satu id di GROUPS. "id" harus unik (huruf kecil, tanpa spasi).
+     ===================================================================== -->
+<script id="vocab-data">
+const GROUPS = [
+  { id: 'dasar',    name: 'Dasar & Fonetik',       icon: '🔤', color: '#0EA5E9' },
+  { id: 'alam',     name: 'Alam & Hewan',          icon: '🌿', color: '#16A34A' },
+  { id: 'manusia',  name: 'Manusia & Sikap',       icon: '🧑', color: '#E11D48' },
+  { id: 'grammar',  name: 'Grammar & Jenis Kata',  icon: '📐', color: '#7C3AED' },
+  { id: 'harian',   name: 'Kehidupan Sehari-hari', icon: '🏠', color: '#EA580C' },
+  { id: 'ekspresi', name: 'Ekspresi & Pidato',     icon: '🎤', color: '#0D9488' }
+];
+
+const CATEGORIES = [
+/* ===================== 1 – 10 ===================== */
+{ no: 1, id: 'alphabet', g: 'dasar', name: 'Abjad', en: 'Alphabet', icon: '🔤', items: [
+  ["A","/eɪ/","dibaca: ei","A is for apple."],
+  ["B","/biː/","dibaca: bi","B is for book."],
+  ["C","/siː/","dibaca: si","C is for cat."],
+  ["D","/diː/","dibaca: di","D is for dog."],
+  ["E","/iː/","dibaca: i","E is for egg."],
+  ["F","/ɛf/","dibaca: ef","F is for fish."],
+  ["G","/dʒiː/","dibaca: ji","G is for goat."],
+  ["H","/eɪtʃ/","dibaca: eitj","H is for hat."],
+  ["I","/aɪ/","dibaca: ai","I is for ice."],
+  ["J","/dʒeɪ/","dibaca: jei","J is for juice."],
+  ["K","/keɪ/","dibaca: kei","K is for kite."],
+  ["L","/ɛl/","dibaca: el","L is for lion."],
+  ["M","/ɛm/","dibaca: em","M is for moon."],
+  ["N","/ɛn/","dibaca: en","N is for nose."],
+  ["O","/oʊ/","dibaca: ou","O is for orange."],
+  ["P","/piː/","dibaca: pi","P is for pen."],
+  ["Q","/kjuː/","dibaca: kyu","Q is for queen."],
+  ["R","/ɑːr/","dibaca: ar","R is for rabbit."],
+  ["S","/ɛs/","dibaca: es","S is for sun."],
+  ["T","/tiː/","dibaca: ti","T is for tree."],
+  ["U","/juː/","dibaca: yu","U is for umbrella."],
+  ["V","/viː/","dibaca: vi","V is for violin."],
+  ["W","/ˈdʌbəl.juː/","dibaca: dabel-yu","W is for water."],
+  ["X","/ɛks/","dibaca: eks","X is for x-ray."],
+  ["Y","/waɪ/","dibaca: wai","Y is for yellow."],
+  ["Z","/ziː/ (US) · /zɛd/ (UK)","dibaca: zi (Amerika) / zed (British)","Z is for zebra."]
+]},
+{ no: 2, id: 'phonetic-symbol', g: 'dasar', name: 'Simbol Bunyi', en: 'Phonetic Symbol', icon: '🗣️', items: [
+  ["iː","/siː/","Vokal 'i' panjang","see, tea, green","see"],
+  ["ɪ","/sɪt/","Vokal 'i' pendek & santai","sit, big, fish","sit"],
+  ["æ","/kæt/","Vokal antara 'a' dan 'e'","cat, bad, apple","cat"],
+  ["ʌ","/kʌp/","Vokal 'a' pendek","cup, bus, love","cup"],
+  ["ə","/əˈbaʊt/","Schwa — 'e' lemah seperti pada 'emas'","about, banana, sofa","about"],
+  ["uː","/fuːd/","Vokal 'u' panjang","food, blue, school","food"],
+  ["θ","/θɪŋk/","Konsonan 'th' tak bersuara (lidah di antara gigi)","think, three, mouth","think"],
+  ["ð","/ðɪs/","Konsonan 'th' bersuara","this, mother, they","this"],
+  ["ʃ","/ʃiː/","Bunyi 'sy'","she, fish, nation","she"],
+  ["ʒ","/ˈvɪʒən/","Bunyi 'zy' (getar)","vision, measure, usual","vision"],
+  ["ŋ","/sɪŋ/","Bunyi 'ng'","sing, long, thing","sing"],
+  ["tʃ","/tʃɜːrtʃ/","Bunyi 'c' (seperti 'cari')","church, chair, watch","church"]
+]},
+{ no: 3, id: 'how-to-say-phonetic', g: 'dasar', name: 'Cara Baca Simbol Bunyi', en: 'How to Say Phonetic Symbol', icon: '🔊', items: [
+  ["schwa","/ʃwɑː/","Nama simbol ə","The symbol ə is called schwa."],
+  ["theta","/ˈθeɪtə/","Nama simbol θ","Theta is the 'th' in 'think'."],
+  ["eth","/ɛð/","Nama simbol ð","Eth is the 'th' in 'this'."],
+  ["esh","/ɛʃ/","Nama simbol ʃ","Esh sounds like 'sh'."],
+  ["ezh","/ɛʒ/","Nama simbol ʒ","Ezh is the sound in 'measure'."],
+  ["eng","/ɛŋ/","Nama simbol ŋ","Eng is the 'ng' in 'sing'."],
+  ["ash","/æʃ/","Nama simbol æ","Ash is the vowel in 'cat'."],
+  ["wedge","/wɛdʒ/","Nama simbol ʌ (turned v)","The wedge is the vowel in 'cup'."],
+  ["length mark","/lɛŋθ mɑːrk/","Tanda ː — bunyi dipanjangkan","/iː/ has a length mark."],
+  ["stress mark","/strɛs mɑːrk/","Tanda ˈ — suku kata yang ditekan","In /əˈbaʊt/ the stress mark is before 'baʊt'."]
+]},
+{ no: 4, id: 'pronoun', g: 'grammar', name: 'Kata Ganti', en: 'Pronoun', icon: '👤', items: [
+  ["I","/aɪ/","saya, aku","I am a student."],
+  ["you","/juː/","kamu, Anda, kalian","You are very kind."],
+  ["he","/hiː/","dia (laki-laki)","He is my brother."],
+  ["she","/ʃiː/","dia (perempuan)","She works in a bank."],
+  ["it","/ɪt/","ia, itu (benda/hewan)","It is a beautiful day."],
+  ["we","/wiː/","kami, kita","We study English every day."],
+  ["they","/ðeɪ/","mereka","They live in Semarang."],
+  ["me","/miː/","saya (objek)","Please help me."],
+  ["him","/hɪm/","dia laki-laki (objek)","I called him yesterday."],
+  ["her","/hɜːr/","dia perempuan (objek) / miliknya","I like her idea."],
+  ["us","/ʌs/","kami, kita (objek)","Join us for lunch."],
+  ["them","/ðɛm/","mereka (objek)","I gave them a gift."],
+  ["my","/maɪ/","milik saya (+ kata benda)","This is my bag."],
+  ["mine","/maɪn/","punya saya (berdiri sendiri)","That pen is mine."]
+]},
+{ no: 5, id: 'body', g: 'manusia', name: 'Anggota Badan', en: 'Parts of the Body', icon: '🖐️', items: [
+  ["head","/hɛd/","kepala","My head hurts."],
+  ["hair","/hɛr/","rambut","She has long hair."],
+  ["eye","/aɪ/","mata","Close your eyes."],
+  ["ear","/ɪr/","telinga","I have two ears."],
+  ["nose","/noʊz/","hidung","My nose is cold."],
+  ["mouth","/maʊθ/","mulut","Open your mouth."],
+  ["neck","/nɛk/","leher","A giraffe has a long neck."],
+  ["shoulder","/ˈʃoʊldər/","bahu, pundak","He carried the bag on his shoulder."],
+  ["elbow","/ˈɛlboʊ/","siku","Don't put your elbows on the table."],
+  ["finger","/ˈfɪŋɡər/","jari tangan","She wears a ring on her finger."],
+  ["knee","/niː/","lutut","He fell and hurt his knee."],
+  ["toe","/toʊ/","jari kaki","I stubbed my toe."]
+]},
+{ no: 6, id: 'physical-actions', g: 'manusia', name: 'Aktivitas Fisik', en: 'Physical Actions', icon: '🏃', items: [
+  ["walk","/wɔːk/","berjalan","I walk to school."],
+  ["run","/rʌn/","berlari","He runs every morning."],
+  ["jump","/dʒʌmp/","melompat","The kids jump into the pool."],
+  ["sit","/sɪt/","duduk","Please sit down."],
+  ["stand","/stænd/","berdiri","Stand up, please."],
+  ["push","/pʊʃ/","mendorong","Push the door."],
+  ["pull","/pʊl/","menarik","Pull the rope."],
+  ["climb","/klaɪm/","memanjat","They climb the mountain."],
+  ["kneel","/niːl/","berlutut","He kneels on the floor."],
+  ["crawl","/krɔːl/","merangkak","The baby is crawling."],
+  ["throw","/θroʊ/","melempar","Throw the ball to me."],
+  ["catch","/kætʃ/","menangkap","Can you catch it?"]
+]},
+{ no: 7, id: 'fruits', g: 'alam', name: 'Buah-buahan', en: 'Fruits', icon: '🍎', items: [
+  ["apple","/ˈæpəl/","apel","An apple a day keeps the doctor away."],
+  ["banana","/bəˈnænə/","pisang","Monkeys love bananas."],
+  ["mango","/ˈmæŋɡoʊ/","mangga","This mango is very sweet."],
+  ["orange","/ˈɔːrɪndʒ/","jeruk","I drink orange juice."],
+  ["grape","/ɡreɪp/","anggur","She bought a bunch of grapes."],
+  ["watermelon","/ˈwɔːtərmɛlən/","semangka","Watermelon is fresh on a hot day."],
+  ["pineapple","/ˈpaɪnæpəl/","nanas","Pineapple is a bit sour."],
+  ["papaya","/pəˈpaɪə/","pepaya","Papaya is good for digestion."],
+  ["durian","/ˈdʊriən/","durian","Durian has a strong smell."],
+  ["coconut","/ˈkoʊkənʌt/","kelapa","We drank young coconut water."],
+  ["rambutan","/ræmˈbuːtən/","rambutan","Rambutan has a hairy skin."]
+]},
+{ no: 8, id: 'clothes', g: 'harian', name: 'Pakaian', en: 'Clothes', icon: '👕', items: [
+  ["shirt","/ʃɜːrt/","kemeja","He wears a white shirt to work."],
+  ["T-shirt","/ˈtiː ʃɜːrt/","kaus","I like this black T-shirt."],
+  ["trousers","/ˈtraʊzərz/","celana panjang","His trousers are too long."],
+  ["skirt","/skɜːrt/","rok","She wears a blue skirt."],
+  ["jacket","/ˈdʒækɪt/","jaket","Bring your jacket, it's cold."],
+  ["hat","/hæt/","topi","He put on his hat."],
+  ["shoes","/ʃuːz/","sepatu","Take off your shoes."],
+  ["socks","/sɑːks/","kaus kaki","I need new socks."],
+  ["tie","/taɪ/","dasi","He wears a tie to the meeting."],
+  ["belt","/bɛlt/","ikat pinggang","This belt is made of leather."],
+  ["sarong","/səˈrɔːŋ/","sarung","My father wears a sarong to the mosque."]
+]},
+{ no: 9, id: 'animals', g: 'alam', name: 'Hewan-hewan', en: 'Animals', icon: '🐾', items: [
+  ["dog","/dɔːɡ/","anjing","The dog is barking."],
+  ["cat","/kæt/","kucing","My cat sleeps all day."],
+  ["bird","/bɜːrd/","burung","A bird is singing."],
+  ["fish","/fɪʃ/","ikan","Fish live in water."],
+  ["horse","/hɔːrs/","kuda","He rides a horse."],
+  ["monkey","/ˈmʌŋki/","monyet","The monkey is eating a banana."],
+  ["snake","/sneɪk/","ular","Be careful, there's a snake!"],
+  ["rabbit","/ˈræbɪt/","kelinci","The rabbit has long ears."],
+  ["mouse","/maʊs/","tikus (kecil)","A mouse ran into the kitchen."],
+  ["turtle","/ˈtɜːrtəl/","kura-kura, penyu","The turtle moves slowly."]
+]},
+{ no: 10, id: 'pets-cattle', g: 'alam', name: 'Binatang Piaraan & Ternak', en: 'Pets & Cattle Animals', icon: '🐄', items: [
+  ["cow","/kaʊ/","sapi","The cow gives us milk."],
+  ["goat","/ɡoʊt/","kambing","The goat is eating grass."],
+  ["sheep","/ʃiːp/","domba","Sheep give us wool."],
+  ["buffalo","/ˈbʌfəloʊ/","kerbau","Farmers use buffaloes to plow fields."],
+  ["chicken","/ˈtʃɪkɪn/","ayam","The chicken lays eggs."],
+  ["duck","/dʌk/","bebek","Ducks can swim."],
+  ["rooster","/ˈruːstər/","ayam jantan","The rooster crows in the morning."],
+  ["hamster","/ˈhæmstər/","hamster","My hamster lives in a small cage."],
+  ["parrot","/ˈpærət/","burung beo, nuri","The parrot can talk."],
+  ["pigeon","/ˈpɪdʒɪn/","burung merpati","He keeps pigeons on the roof."]
+]},
+/* ===================== 11 – 20 ===================== */
+{ no: 11, id: 'wild-animals', g: 'alam', name: 'Binatang Liar', en: 'Wild Animals', icon: '🐯', items: [
+  ["tiger","/ˈtaɪɡər/","harimau","The Sumatran tiger is endangered."],
+  ["lion","/ˈlaɪən/","singa","The lion is the king of the jungle."],
+  ["elephant","/ˈɛlɪfənt/","gajah","Elephants have long trunks."],
+  ["bear","/bɛr/","beruang","The bear is looking for honey."],
+  ["wolf","/wʊlf/","serigala","Wolves hunt in packs."],
+  ["crocodile","/ˈkrɑːkədaɪl/","buaya","A crocodile lives in the river."],
+  ["giraffe","/dʒəˈræf/","jerapah","The giraffe is very tall."],
+  ["deer","/dɪr/","rusa","A deer ran into the forest."],
+  ["orangutan","/əˈræŋətæn/","orang utan","Orangutans live in Borneo and Sumatra."],
+  ["rhinoceros","/raɪˈnɑːsərəs/","badak","The Javan rhinoceros is very rare."]
+]},
+{ no: 12, id: 'insects', g: 'alam', name: 'Serangga', en: 'Common Insects', icon: '🐝', items: [
+  ["ant","/ænt/","semut","Ants are very hardworking."],
+  ["mosquito","/məˈskiːtoʊ/","nyamuk","A mosquito bit my arm."],
+  ["fly","/flaɪ/","lalat","Cover the food from flies."],
+  ["bee","/biː/","lebah","Bees make honey."],
+  ["butterfly","/ˈbʌtərflaɪ/","kupu-kupu","The butterfly has colorful wings."],
+  ["cockroach","/ˈkɑːkroʊtʃ/","kecoak","I saw a cockroach in the kitchen."],
+  ["grasshopper","/ˈɡræshɑːpər/","belalang","The grasshopper jumps high."],
+  ["dragonfly","/ˈdræɡənflaɪ/","capung","A dragonfly flew over the pond."],
+  ["termite","/ˈtɜːrmaɪt/","rayap","Termites damaged the wooden door."],
+  ["firefly","/ˈfaɪərflaɪ/","kunang-kunang","Fireflies glow at night."]
+]},
+{ no: 13, id: 'water-air-ground', g: 'alam', name: 'Binatang di Air, Udara & Tanah', en: 'Animals in Water, Air & Ground', icon: '🐬', items: [
+  ["shark","/ʃɑːrk/","ikan hiu (air)","Sharks have sharp teeth."],
+  ["whale","/weɪl/","ikan paus (air)","The blue whale is the largest animal."],
+  ["dolphin","/ˈdɑːlfɪn/","lumba-lumba (air)","Dolphins are smart animals."],
+  ["crab","/kræb/","kepiting (air)","The crab walks sideways."],
+  ["eagle","/ˈiːɡəl/","burung elang (udara)","The eagle flies very high."],
+  ["owl","/aʊl/","burung hantu (udara)","Owls hunt at night."],
+  ["bat","/bæt/","kelelawar (udara)","Bats sleep upside down."],
+  ["earthworm","/ˈɜːrθwɜːrm/","cacing tanah (tanah)","Earthworms make the soil healthy."],
+  ["mole","/moʊl/","tikus mondok (tanah)","A mole digs tunnels underground."],
+  ["frog","/frɔːɡ/","katak (air & darat)","The frog jumped into the pond."]
+]},
+{ no: 14, id: 'family', g: 'manusia', name: 'Keluarga', en: 'Family', icon: '👨‍👩‍👧', items: [
+  ["father","/ˈfɑːðər/","ayah","My father is a farmer."],
+  ["mother","/ˈmʌðər/","ibu","My mother cooks every morning."],
+  ["brother","/ˈbrʌðər/","saudara laki-laki","My brother is older than me."],
+  ["sister","/ˈsɪstər/","saudara perempuan","My little sister is ten."],
+  ["grandfather","/ˈɡrænfɑːðər/","kakek","My grandfather tells funny stories."],
+  ["grandmother","/ˈɡrænmʌðər/","nenek","My grandmother lives in the village."],
+  ["uncle","/ˈʌŋkəl/","paman, om","My uncle works in Jakarta."],
+  ["aunt","/ænt/","bibi, tante","My aunt makes delicious cakes."],
+  ["cousin","/ˈkʌzən/","sepupu","My cousin and I are the same age."],
+  ["nephew","/ˈnɛfjuː/","keponakan laki-laki","My nephew is in kindergarten."],
+  ["niece","/niːs/","keponakan perempuan","My niece loves drawing."],
+  ["parents","/ˈpɛrənts/","orang tua","I live with my parents."]
+]},
+{ no: 15, id: 'intellectual-ability', g: 'manusia', name: 'Kemampuan Intelektual', en: 'Intellectual Ability', icon: '🧠', items: [
+  ["smart","/smɑːrt/","pintar","She is a smart student."],
+  ["clever","/ˈklɛvər/","cerdik, pandai","That's a clever idea!"],
+  ["intelligent","/ɪnˈtɛlɪdʒənt/","cerdas","Dolphins are intelligent animals."],
+  ["brilliant","/ˈbrɪljənt/","sangat cerdas, cemerlang","He is a brilliant scientist."],
+  ["wise","/waɪz/","bijaksana","My grandfather is a wise man."],
+  ["gifted","/ˈɡɪftɪd/","berbakat","She is a gifted pianist."],
+  ["creative","/kriˈeɪtɪv/","kreatif","Designers must be creative."],
+  ["logical","/ˈlɑːdʒɪkəl/","logis, masuk akal","Give me a logical reason."],
+  ["knowledgeable","/ˈnɑːlɪdʒəbəl/","berpengetahuan luas","Our teacher is very knowledgeable."]
+]},
+{ no: 16, id: 'lacking-ability', g: 'manusia', name: 'Kekurangan Kemampuan', en: 'Lacking Ability', icon: '🤷', items: [
+  ["stupid","/ˈstuːpɪd/","bodoh","It was a stupid mistake."],
+  ["foolish","/ˈfuːlɪʃ/","konyol, bodoh","Don't be foolish."],
+  ["slow","/sloʊ/","lamban (dalam berpikir)","He is a bit slow in math."],
+  ["ignorant","/ˈɪɡnərənt/","tidak tahu apa-apa","He is ignorant about politics."],
+  ["clumsy","/ˈklʌmzi/","kikuk, ceroboh (gerakan)","I'm so clumsy, I dropped my phone again."],
+  ["careless","/ˈkɛrləs/","lalai, ceroboh","A careless driver caused the accident."],
+  ["naive","/naɪˈiːv/","naif, lugu","She was naive to trust him."],
+  ["forgetful","/fərˈɡɛtfəl/","pelupa","My grandpa is getting forgetful."],
+  ["incompetent","/ɪnˈkɑːmpɪtənt/","tidak cakap, tidak kompeten","The manager was incompetent."]
+]},
+{ no: 17, id: 'attitude-life', g: 'manusia', name: 'Sikap Terhadap Kehidupan', en: 'Attitude Toward Life', icon: '🌱', items: [
+  ["optimistic","/ˌɑːptɪˈmɪstɪk/","optimis","Stay optimistic about the future."],
+  ["pessimistic","/ˌpɛsɪˈmɪstɪk/","pesimis","Don't be so pessimistic."],
+  ["ambitious","/æmˈbɪʃəs/","ambisius, berambisi","She is ambitious and works hard."],
+  ["lazy","/ˈleɪzi/","malas","Don't be lazy, do your homework."],
+  ["diligent","/ˈdɪlɪdʒənt/","rajin, tekun","He is a diligent worker."],
+  ["patient","/ˈpeɪʃənt/","sabar","Be patient, success takes time."],
+  ["grateful","/ˈɡreɪtfəl/","bersyukur","I'm grateful for my family."],
+  ["confident","/ˈkɑːnfɪdənt/","percaya diri","She feels confident before the exam."],
+  ["realistic","/ˌriːəˈlɪstɪk/","realistis","Set realistic goals."],
+  ["easygoing","/ˌiːziˈɡoʊɪŋ/","santai, tidak mudah cemas","My roommate is very easygoing."]
+]},
+{ no: 18, id: 'attitude-others', g: 'manusia', name: 'Sikap Terhadap Orang Lain', en: 'Attitude Toward Other People', icon: '🤝', items: [
+  ["kind","/kaɪnd/","baik hati","She is kind to everyone."],
+  ["friendly","/ˈfrɛndli/","ramah","The people here are friendly."],
+  ["polite","/pəˈlaɪt/","sopan","Always be polite to older people."],
+  ["rude","/ruːd/","kasar, tidak sopan","It's rude to interrupt."],
+  ["generous","/ˈdʒɛnərəs/","dermawan, murah hati","He is generous with his time."],
+  ["selfish","/ˈsɛlfɪʃ/","egois","Don't be selfish, share it."],
+  ["honest","/ˈɑːnɪst/","jujur","An honest person tells the truth."],
+  ["arrogant","/ˈærəɡənt/","sombong","He is arrogant about his wealth."],
+  ["humble","/ˈhʌmbəl/","rendah hati","Despite his success, he stays humble."],
+  ["helpful","/ˈhɛlpfəl/","suka menolong","Thanks, you've been very helpful."]
+]},
+{ no: 19, id: 'classroom', g: 'harian', name: 'Hal-hal di Kelas', en: 'Something in the Class', icon: '🏫', items: [
+  ["whiteboard","/ˈwaɪtbɔːrd/","papan tulis putih","Write the answer on the whiteboard."],
+  ["blackboard","/ˈblækbɔːrd/","papan tulis hitam","The teacher wrote on the blackboard."],
+  ["chalk","/tʃɔːk/","kapur tulis","Can I have a piece of chalk?"],
+  ["desk","/dɛsk/","meja belajar","Put your books on the desk."],
+  ["chair","/tʃɛr/","kursi","Sit on your chair."],
+  ["book","/bʊk/","buku","Open your book to page ten."],
+  ["pen","/pɛn/","pulpen","May I borrow your pen?"],
+  ["pencil","/ˈpɛnsəl/","pensil","Use a pencil for the drawing."],
+  ["eraser","/ɪˈreɪsər/","penghapus","I need an eraser."],
+  ["ruler","/ˈruːlər/","penggaris","Draw a line with a ruler."],
+  ["sharpener","/ˈʃɑːrpənər/","rautan pensil","My sharpener is broken."],
+  ["map","/mæp/","peta","There is a map of Indonesia on the wall."]
+]},
+{ no: 20, id: 'march-instruction', g: 'ekspresi', name: 'Aba-aba Baris-berbaris', en: 'March Instruction', icon: '🪖', items: [
+  ["Attention!","/əˈtɛnʃən/","Siap, grak!","Command to stand straight and still."],
+  ["Stand at ease!","/stænd æt iːz/","Istirahat di tempat, grak!","Command to rest in position."],
+  ["Right face!","/raɪt feɪs/","Hadap kanan, grak!","Turn 90 degrees to the right."],
+  ["Left face!","/lɛft feɪs/","Hadap kiri, grak!","Turn 90 degrees to the left."],
+  ["About face!","/əˈbaʊt feɪs/","Balik kanan, grak!","Turn around 180 degrees."],
+  ["Forward, march!","/ˈfɔːrwərd mɑːrtʃ/","Maju, jalan!","Start marching forward."],
+  ["Halt!","/hɔːlt/","Henti, grak!","Stop marching."],
+  ["Mark time, march!","/mɑːrk taɪm mɑːrtʃ/","Langkah di tempat, grak!","March in place without moving forward."],
+  ["Dress right, dress!","/drɛs raɪt drɛs/","Lencang kanan, grak!","Line up by looking to the right."],
+  ["Count off!","/kaʊnt ɔːf/","Hitung, mulai!","Each person says a number in order."],
+  ["Dismissed!","/dɪsˈmɪst/","Bubar, jalan!","The formation is ended."]
+]},
+/* ===================== 21 – 30 ===================== */
+{ no: 21, id: 'ceremony-instruction', g: 'ekspresi', name: 'Aba-aba Dalam Apel', en: 'Ceremony Instruction', icon: '🇮🇩', items: [
+  ["Ceremony leader","/ˈsɛrəmoʊni ˈliːdər/","Pemimpin upacara","The ceremony leader enters the field."],
+  ["Ceremony inspector","/ˈsɛrəmoʊni ɪnˈspɛktər/","Pembina upacara","The ceremony inspector takes his place."],
+  ["Hand salute!","/hænd səˈluːt/","Hormat, grak!","All participants: hand salute!"],
+  ["Ready, two!","/ˈrɛdi tuː/","Tegak, grak! (selesai hormat)","Ends the hand salute."],
+  ["Flag raising","/flæɡ ˈreɪzɪŋ/","Pengibaran bendera","The flag raising begins at seven."],
+  ["National anthem","/ˈnæʃənəl ˈænθəm/","Lagu kebangsaan","We sing the national anthem."],
+  ["Moment of silence","/ˈmoʊmənt əv ˈsaɪləns/","Mengheningkan cipta","Let us have a moment of silence."],
+  ["The troops are ready.","/ðə truːps ɑːr ˈrɛdi/","Pasukan siap (laporan).","Sir, the troops are ready for the ceremony."],
+  ["The ceremony is over.","/ðə ˈsɛrəmoʊni ɪz ˈoʊvər/","Upacara selesai.","The ceremony is over, troops dismissed."]
+]},
+{ no: 22, id: 'weather-condition', g: 'alam', name: 'Kondisi Cuaca', en: 'Weather Condition', icon: '🌤️', items: [
+  ["sunny","/ˈsʌni/","cerah, panas matahari","It's sunny today."],
+  ["cloudy","/ˈklaʊdi/","berawan","The sky is cloudy."],
+  ["overcast","/ˌoʊvərˈkæst/","mendung","It's overcast; it may rain."],
+  ["rainy","/ˈreɪni/","hujan","I stay home on rainy days."],
+  ["windy","/ˈwɪndi/","berangin","It's too windy to fly a kite."],
+  ["stormy","/ˈstɔːrmi/","badai","The sea is stormy tonight."],
+  ["clear","/klɪr/","cerah (langit bersih)","The sky is clear tonight."],
+  ["humid","/ˈhjuːmɪd/","lembap, gerah","Jakarta is hot and humid."],
+  ["thunder","/ˈθʌndər/","guntur, petir (suara)","Did you hear the thunder?"],
+  ["lightning","/ˈlaɪtnɪŋ/","kilat (cahaya)","Lightning lit up the sky."]
+]},
+{ no: 23, id: 'temperature-wind', g: 'alam', name: 'Suhu & Tiupan Angin', en: 'Temperature & Wind Blow', icon: '🌡️', items: [
+  ["temperature","/ˈtɛmprətʃər/","suhu","The temperature is 30 degrees."],
+  ["degree","/dɪˈɡriː/","derajat","It's 25 degrees Celsius."],
+  ["warm","/wɔːrm/","hangat","The water is warm."],
+  ["cool","/kuːl/","sejuk","The mountain air is cool."],
+  ["mild","/maɪld/","(suhu) sedang, tidak ekstrem","The weather is mild in April."],
+  ["breeze","/briːz/","angin sepoi-sepoi","A gentle breeze came from the sea."],
+  ["gust","/ɡʌst/","hembusan angin kencang (sesaat)","A gust of wind blew my hat away."],
+  ["gale","/ɡeɪl/","angin kencang","The ships stayed in port because of the gale."],
+  ["thermometer","/θərˈmɑːmɪtər/","termometer","Check the thermometer."],
+  ["Celsius","/ˈsɛlsiəs/","Celsius (satuan suhu)","Water boils at 100 degrees Celsius."]
+]},
+{ no: 24, id: 'cold-hot', g: 'alam', name: 'Cuaca Dingin & Panas', en: 'Cold Weather & Hot Weather', icon: '🔥', items: [
+  ["cold","/koʊld/","dingin","It's cold in the morning."],
+  ["chilly","/ˈtʃɪli/","dingin (menusuk)","It's a bit chilly tonight."],
+  ["freezing","/ˈfriːzɪŋ/","sangat dingin, membeku","It's freezing outside!"],
+  ["frost","/frɔːst/","embun beku","There was frost on the grass."],
+  ["snow","/snoʊ/","salju","It never snows in Jakarta."],
+  ["hot","/hɑːt/","panas","It's very hot at noon."],
+  ["boiling","/ˈbɔɪlɪŋ/","panas sekali","It's boiling in here!"],
+  ["scorching","/ˈskɔːrtʃɪŋ/","terik, sangat panas","It was a scorching afternoon."],
+  ["heatwave","/ˈhiːtweɪv/","gelombang panas","Europe had a heatwave last summer."],
+  ["drought","/draʊt/","kemarau panjang, kekeringan","The drought destroyed the crops."]
+]},
+{ no: 25, id: 'wet-foggy', g: 'alam', name: 'Cuaca Basah & Berkabut', en: 'Wet Weather & Foggy Weather', icon: '🌫️', items: [
+  ["drizzle","/ˈdrɪzəl/","gerimis","It's only a drizzle."],
+  ["shower","/ˈʃaʊər/","hujan sebentar","There will be showers this afternoon."],
+  ["downpour","/ˈdaʊnpɔːr/","hujan sangat deras","We got caught in a downpour."],
+  ["puddle","/ˈpʌdəl/","genangan air","The kids jumped in the puddles."],
+  ["damp","/dæmp/","lembap, agak basah","My clothes are still damp."],
+  ["soaked","/soʊkt/","basah kuyup","I was soaked to the skin."],
+  ["fog","/fɔːɡ/","kabut","The fog is very thick this morning."],
+  ["mist","/mɪst/","kabut tipis","Mist covered the valley."],
+  ["haze","/heɪz/","kabut asap, jerebu","The haze came from forest fires."],
+  ["dew","/duː/","embun","The grass is wet with dew."]
+]},
+{ no: 26, id: 'jobs', g: 'harian', name: 'Pekerjaan & Profesi', en: 'Job & Profession', icon: '💼', items: [
+  ["teacher","/ˈtiːtʃər/","guru","My mother is a teacher."],
+  ["doctor","/ˈdɑːktər/","dokter","You should see a doctor."],
+  ["nurse","/nɜːrs/","perawat","The nurse is very kind."],
+  ["farmer","/ˈfɑːrmər/","petani","Farmers grow rice."],
+  ["police officer","/pəˈliːs ˈɔːfɪsər/","polisi","Ask the police officer for help."],
+  ["lawyer","/ˈlɔːjər/","pengacara","She wants to be a lawyer."],
+  ["engineer","/ˌɛndʒɪˈnɪr/","insinyur","He is a civil engineer."],
+  ["accountant","/əˈkaʊntənt/","akuntan","The accountant checks the reports."],
+  ["driver","/ˈdraɪvər/","sopir, pengemudi","The driver is waiting outside."],
+  ["chef","/ʃɛf/","koki","The chef cooks delicious food."],
+  ["journalist","/ˈdʒɜːrnəlɪst/","wartawan","The journalist interviewed the minister."],
+  ["entrepreneur","/ˌɑːntrəprəˈnɜːr/","wirausahawan","He became a young entrepreneur."]
+]},
+{ no: 27, id: 'outer-space', g: 'alam', name: 'Luar Angkasa', en: 'Outer Space', icon: '🪐', items: [
+  ["sun","/sʌn/","matahari","The sun rises in the east."],
+  ["moon","/muːn/","bulan","The moon is full tonight."],
+  ["star","/stɑːr/","bintang","Look at the stars!"],
+  ["planet","/ˈplænɪt/","planet","Mars is a red planet."],
+  ["Earth","/ɜːrθ/","bumi","We live on Earth."],
+  ["galaxy","/ˈɡæləksi/","galaksi","Our galaxy is the Milky Way."],
+  ["comet","/ˈkɑːmɪt/","komet","A comet has a bright tail."],
+  ["meteor","/ˈmiːtiər/","meteor","We watched a meteor shower."],
+  ["orbit","/ˈɔːrbɪt/","orbit, garis edar","The Earth orbits the sun."],
+  ["astronaut","/ˈæstrənɔːt/","astronaut","The astronaut walked on the moon."]
+]},
+{ no: 28, id: 'vegetables', g: 'alam', name: 'Sayur-sayuran', en: 'Vegetables', icon: '🥕', items: [
+  ["carrot","/ˈkærət/","wortel","Carrots are good for your eyes."],
+  ["cabbage","/ˈkæbɪdʒ/","kubis, kol","Cabbage is cheap at the market."],
+  ["spinach","/ˈspɪnɪtʃ/","bayam","I like spinach soup."],
+  ["potato","/pəˈteɪtoʊ/","kentang","French fries are made from potatoes."],
+  ["tomato","/təˈmeɪtoʊ/","tomat","Add some tomato to the salad."],
+  ["cucumber","/ˈkjuːkʌmbər/","mentimun","Cucumber is fresh and crunchy."],
+  ["shallot","/ʃəˈlɑːt/","bawang merah","Fry the shallots until golden."],
+  ["garlic","/ˈɡɑːrlɪk/","bawang putih","Chop two cloves of garlic."],
+  ["chili","/ˈtʃɪli/","cabai","This chili is very hot."],
+  ["eggplant","/ˈɛɡplænt/","terong","I cooked eggplant with sambal."],
+  ["corn","/kɔːrn/","jagung","We grilled corn on the beach."],
+  ["water spinach","/ˈwɔːtər ˈspɪnɪtʃ/","kangkung","Stir-fried water spinach is my favorite."]
+]},
+{ no: 29, id: 'basic-time', g: 'dasar', name: 'Kosakata Waktu Dasar', en: 'Basic Time Words', icon: '⏰', items: [
+  ["second","/ˈsɛkənd/","detik","Wait a second."],
+  ["minute","/ˈmɪnɪt/","menit","I'll be there in five minutes."],
+  ["hour","/aʊər/","jam (durasi)","The meeting lasted an hour."],
+  ["day","/deɪ/","hari","Have a nice day!"],
+  ["week","/wiːk/","minggu (7 hari)","See you next week."],
+  ["month","/mʌnθ/","bulan","I pay the rent every month."],
+  ["year","/jɪr/","tahun","Happy New Year!"],
+  ["decade","/ˈdɛkeɪd/","dekade (10 tahun)","Prices have doubled in a decade."],
+  ["century","/ˈsɛntʃəri/","abad (100 tahun)","We live in the 21st century."],
+  ["morning","/ˈmɔːrnɪŋ/","pagi","I jog in the morning."],
+  ["noon","/nuːn/","tengah hari","Let's meet at noon."],
+  ["midnight","/ˈmɪdnaɪt/","tengah malam","He went to bed at midnight."]
+]},
+{ no: 30, id: 'date-us-uk', g: 'dasar', name: 'Penulisan Tanggal Amerika & British', en: 'The Date in American & British', icon: '📅', items: [
+  ["11/21/2026","","Format Amerika: bulan/tanggal/tahun (21 November 2026)","Read: November twenty-first, twenty twenty-six.","November twenty-first, twenty twenty-six"],
+  ["21/11/2026","","Format British: tanggal/bulan/tahun (21 November 2026)","Read: the twenty-first of November, twenty twenty-six.","the twenty-first of November, twenty twenty-six"],
+  ["November 21, 2026","","Penulisan panjang gaya Amerika (bulan dulu, pakai koma)","The event is on November 21, 2026.","November twenty-first, twenty twenty-six"],
+  ["21 November 2026","","Penulisan panjang gaya British (tanggal dulu, tanpa koma)","The event is on 21 November 2026.","the twenty-first of November, twenty twenty-six"],
+  ["07/04","","Awas! Amerika = 4 Juli; British = 7 April","Independence Day in the US is 07/04.","July fourth"],
+  ["1st, 2nd, 3rd, 4th","/fɜːrst, ˈsɛkənd, θɜːrd, fɔːrθ/","Bilangan urutan untuk tanggal (ke-1, ke-2, ke-3, ke-4)","My birthday is on the 3rd of May.","first, second, third, fourth"],
+  ["2026","/ˌtwɛnti ˌtwɛnti ˈsɪks/","Tahun dibaca per dua angka: twenty twenty-six","I was born in 1998 (nineteen ninety-eight).","twenty twenty-six"],
+  ["2005","/tuː ˈθaʊzənd ənd faɪv/","Tahun 2000–2009 dibaca: two thousand (and) five","She graduated in 2005.","two thousand and five"]
+]},
+/* ===================== 31 – 40 ===================== */
+{ no: 31, id: 'days', g: 'dasar', name: 'Nama Hari Dalam Seminggu', en: 'Days of the Week', icon: '🗓️', items: [
+  ["Monday","/ˈmʌndeɪ/","Senin","I have a meeting on Monday."],
+  ["Tuesday","/ˈtuːzdeɪ/","Selasa","The shop is closed on Tuesday."],
+  ["Wednesday","/ˈwɛnzdeɪ/","Rabu","We play futsal every Wednesday."],
+  ["Thursday","/ˈθɜːrzdeɪ/","Kamis","See you on Thursday."],
+  ["Friday","/ˈfraɪdeɪ/","Jumat","Friday prayer starts at noon."],
+  ["Saturday","/ˈsætərdeɪ/","Sabtu","I sleep late on Saturday."],
+  ["Sunday","/ˈsʌndeɪ/","Minggu","We visit grandma on Sunday."],
+  ["weekend","/ˈwiːkɛnd/","akhir pekan","What are you doing this weekend?"],
+  ["weekday","/ˈwiːkdeɪ/","hari kerja (Senin–Jumat)","I work on weekdays."]
+]},
+{ no: 32, id: 'months-seasons', g: 'dasar', name: 'Nama Bulan & Musim', en: 'Months & Seasons', icon: '🍂', items: [
+  ["January","/ˈdʒænjuɛri/","Januari","The year starts in January."],
+  ["February","/ˈfɛbruɛri/","Februari","February is the shortest month."],
+  ["March","/mɑːrtʃ/","Maret","My exam is in March."],
+  ["April","/ˈeɪprəl/","April","Kartini Day is in April."],
+  ["May","/meɪ/","Mei","Labour Day is on May 1st."],
+  ["June","/dʒuːn/","Juni","School holidays start in June."],
+  ["July","/dʒʊˈlaɪ/","Juli","It's dry in July."],
+  ["August","/ˈɔːɡəst/","Agustus","Indonesia celebrates independence in August."],
+  ["September","/sɛpˈtɛmbər/","September","She was born in September."],
+  ["October","/ɑːkˈtoʊbər/","Oktober","Youth Pledge Day is in October."],
+  ["November","/noʊˈvɛmbər/","November","It rains a lot in November."],
+  ["December","/dɪˈsɛmbər/","Desember","We have a long holiday in December."],
+  ["spring","/sprɪŋ/","musim semi","Flowers bloom in spring."],
+  ["summer","/ˈsʌmər/","musim panas","Summer in Europe is warm."],
+  ["autumn / fall","/ˈɔːtəm/ · /fɔːl/","musim gugur (UK / US)","Leaves turn red in autumn.","autumn, fall"],
+  ["winter","/ˈwɪntər/","musim dingin","It snows in winter."],
+  ["dry season","/draɪ ˈsiːzən/","musim kemarau","Rivers get low in the dry season."],
+  ["rainy season","/ˈreɪni ˈsiːzən/","musim hujan","Bring an umbrella in the rainy season."]
+]},
+{ no: 33, id: 'adverb-time', g: 'grammar', name: 'Kata Keterangan Waktu', en: 'Adverbs of Time', icon: '⌛', items: [
+  ["now","/naʊ/","sekarang","I'm busy now."],
+  ["today","/təˈdeɪ/","hari ini","Today is my birthday."],
+  ["yesterday","/ˈjɛstərdeɪ/","kemarin","I went to the market yesterday."],
+  ["tomorrow","/təˈmɑːroʊ/","besok","See you tomorrow."],
+  ["tonight","/təˈnaɪt/","nanti malam","Let's have dinner tonight."],
+  ["soon","/suːn/","segera","The bus will arrive soon."],
+  ["later","/ˈleɪtər/","nanti","I'll call you later."],
+  ["already","/ɔːlˈrɛdi/","sudah","I have already eaten."],
+  ["yet","/jɛt/","belum (negatif) / sudah? (tanya)","Have you finished yet?"],
+  ["recently","/ˈriːsəntli/","baru-baru ini","I recently moved to Semarang."]
+]},
+{ no: 34, id: 'adverb-place', g: 'grammar', name: 'Kata Keterangan Tempat', en: 'Adverbs of Place', icon: '📍', items: [
+  ["here","/hɪr/","di sini","Come here, please."],
+  ["there","/ðɛr/","di sana","Put the box over there."],
+  ["everywhere","/ˈɛvriwɛr/","di mana-mana","I looked everywhere for my keys."],
+  ["somewhere","/ˈsʌmwɛr/","di suatu tempat","I left my phone somewhere."],
+  ["nowhere","/ˈnoʊwɛr/","tidak di mana pun","The cat is nowhere to be found."],
+  ["inside","/ɪnˈsaɪd/","di dalam","Let's wait inside."],
+  ["outside","/ˌaʊtˈsaɪd/","di luar","The children are playing outside."],
+  ["upstairs","/ˌʌpˈstɛrz/","di lantai atas","My room is upstairs."],
+  ["downstairs","/ˌdaʊnˈstɛrz/","di lantai bawah","Breakfast is ready downstairs."],
+  ["abroad","/əˈbrɔːd/","di/ke luar negeri","She wants to study abroad."],
+  ["nearby","/ˌnɪrˈbaɪ/","di dekat sini","Is there a pharmacy nearby?"]
+]},
+{ no: 35, id: 'adverb-frequency', g: 'grammar', name: 'Kata Keterangan Tingkat Keseringan', en: 'Adverbs of Frequency', icon: '🔁', items: [
+  ["always","/ˈɔːlweɪz/","selalu (100%)","I always brush my teeth before bed."],
+  ["usually","/ˈjuːʒuəli/","biasanya (±90%)","I usually wake up at five."],
+  ["often","/ˈɔːfən/","sering (±70%)","We often eat out on Fridays."],
+  ["frequently","/ˈfriːkwəntli/","sering kali","He frequently travels for work."],
+  ["sometimes","/ˈsʌmtaɪmz/","kadang-kadang (±50%)","Sometimes I walk to the office."],
+  ["occasionally","/əˈkeɪʒənəli/","sesekali (±30%)","We occasionally go to the cinema."],
+  ["rarely","/ˈrɛrli/","jarang (±10%)","She rarely drinks coffee."],
+  ["seldom","/ˈsɛldəm/","jarang sekali","He seldom complains."],
+  ["never","/ˈnɛvər/","tidak pernah (0%)","I never smoke."]
+]},
+{ no: 36, id: 'adverb-manner', g: 'grammar', name: 'Kata Keterangan Cara', en: 'Adverbs of Manner', icon: '🎯', items: [
+  ["quickly","/ˈkwɪkli/","dengan cepat","She finished the test quickly."],
+  ["slowly","/ˈsloʊli/","dengan perlahan","Please speak slowly."],
+  ["carefully","/ˈkɛrfəli/","dengan hati-hati","Drive carefully."],
+  ["loudly","/ˈlaʊdli/","dengan keras (suara)","He laughed loudly."],
+  ["quietly","/ˈkwaɪətli/","dengan pelan/tenang","She closed the door quietly."],
+  ["well","/wɛl/","dengan baik","You speak English well."],
+  ["badly","/ˈbædli/","dengan buruk","The team played badly."],
+  ["happily","/ˈhæpɪli/","dengan gembira","The kids played happily."],
+  ["easily","/ˈiːzəli/","dengan mudah","He solved the problem easily."],
+  ["hard","/hɑːrd/","dengan giat/keras","She works hard every day."]
+]},
+{ no: 37, id: 'colours', g: 'dasar', name: 'Warna', en: 'Colours', icon: '🎨', items: [
+  ["red","/rɛd/","merah","The Indonesian flag is red and white."],
+  ["white","/waɪt/","putih","Snow is white."],
+  ["blue","/bluː/","biru","The sky is blue."],
+  ["green","/ɡriːn/","hijau","Leaves are green."],
+  ["yellow","/ˈjɛloʊ/","kuning","Bananas are yellow."],
+  ["black","/blæk/","hitam","I like black coffee."],
+  ["purple","/ˈpɜːrpəl/","ungu","She wore a purple dress."],
+  ["orange","/ˈɔːrɪndʒ/","oranye, jingga","The sunset is orange."],
+  ["brown","/braʊn/","cokelat","He has brown eyes."],
+  ["pink","/pɪŋk/","merah muda","The flower is pink."],
+  ["grey / gray","/ɡreɪ/","abu-abu (UK / US)","The sky turned grey.","grey"],
+  ["gold","/ɡoʊld/","emas, keemasan","The trophy is gold."]
+]},
+{ no: 38, id: 'string-instruments', g: 'harian', name: 'Alat Musik Bersenar', en: 'String Instruments', icon: '🎸', items: [
+  ["guitar","/ɡɪˈtɑːr/","gitar","He plays the guitar."],
+  ["violin","/ˌvaɪəˈlɪn/","biola","She practices the violin every day."],
+  ["viola","/viˈoʊlə/","viola","The viola is a bit bigger than the violin."],
+  ["cello","/ˈtʃɛloʊ/","selo","The cello has a deep sound."],
+  ["double bass","/ˈdʌbəl beɪs/","kontrabas","The double bass is very large."],
+  ["harp","/hɑːrp/","harpa","The harp sounds like an angel."],
+  ["ukulele","/ˌjuːkəˈleɪli/","ukulele","The ukulele has four strings."],
+  ["banjo","/ˈbændʒoʊ/","banjo","He played country music on the banjo."],
+  ["mandolin","/ˌmændəˈlɪn/","mandolin","The mandolin is popular in folk music."],
+  ["sasando","/saˈsando/","sasando (alat musik petik NTT)","The sasando comes from Rote Island."]
+]},
+{ no: 39, id: 'woodwinds', g: 'harian', name: 'Alat Musik Tiup Kayu', en: 'Woodwinds', icon: '🎶', items: [
+  ["flute","/fluːt/","seruling, flute","She plays the flute in the orchestra."],
+  ["piccolo","/ˈpɪkəloʊ/","pikolo (flute kecil)","The piccolo has a very high sound."],
+  ["clarinet","/ˌklærəˈnɛt/","klarinet","He plays jazz on the clarinet."],
+  ["oboe","/ˈoʊboʊ/","obo","The oboe has a sweet, sharp sound."],
+  ["bassoon","/bəˈsuːn/","basun (bassoon)","The bassoon plays the low notes."],
+  ["saxophone","/ˈsæksəfoʊn/","saksofon","The saxophone is made of brass but is a woodwind."],
+  ["recorder","/rɪˈkɔːrdər/","rekorder (suling sekolah)","Children learn the recorder at school."],
+  ["bamboo flute","/bæmˈbuː fluːt/","suling bambu","He played a Sundanese bamboo flute."]
+]},
+{ no: 40, id: 'brass-keyboard', g: 'harian', name: 'Alat Musik Tiup & Keyboard', en: 'Brass & Keyboard Instruments', icon: '🎹', items: [
+  ["trumpet","/ˈtrʌmpɪt/","terompet","The trumpet is loud and bright."],
+  ["trombone","/trɑːmˈboʊn/","trombon","The trombone has a slide."],
+  ["tuba","/ˈtuːbə/","tuba","The tuba is the largest brass instrument."],
+  ["French horn","/frɛntʃ hɔːrn/","horn Prancis","The French horn has a round shape."],
+  ["piano","/piˈænoʊ/","piano","She has played the piano since she was six."],
+  ["organ","/ˈɔːrɡən/","organ","The church has a big organ."],
+  ["keyboard","/ˈkiːbɔːrd/","keyboard (alat musik elektrik)","He plays keyboard in a band."],
+  ["accordion","/əˈkɔːrdiən/","akordeon","The accordion is popular in folk music."],
+  ["harmonica","/hɑːrˈmɑːnɪkə/","harmonika","He played the harmonica by the fire."]
+]},
+/* ===================== 41 – 50 ===================== */
+{ no: 41, id: 'hair-face-skin', g: 'manusia', name: 'Rambut, Muka, Kulit & Corak Kulit', en: 'Hair, Face, Skin, Complexion', icon: '💇', items: [
+  ["straight hair","/streɪt hɛr/","rambut lurus","She has long straight hair."],
+  ["curly hair","/ˈkɜːrli hɛr/","rambut keriting","His curly hair is cute."],
+  ["wavy hair","/ˈweɪvi hɛr/","rambut bergelombang","Her wavy hair looks natural."],
+  ["bald","/bɔːld/","botak","My uncle is bald."],
+  ["oval face","/ˈoʊvəl feɪs/","wajah oval","She has an oval face."],
+  ["round face","/raʊnd feɪs/","wajah bulat","The baby has a round face."],
+  ["dimple","/ˈdɪmpəl/","lesung pipi","She has dimples when she smiles."],
+  ["freckles","/ˈfrɛkəlz/","bintik-bintik di wajah","He has freckles on his nose."],
+  ["fair skin","/fɛr skɪn/","kulit terang","She has fair skin."],
+  ["tan skin","/tæn skɪn/","kulit sawo matang/kecokelatan","Many Indonesians have tan skin."],
+  ["wrinkles","/ˈrɪŋkəlz/","kerutan","Grandma has wrinkles around her eyes."]
+]},
+{ no: 42, id: 'hefty-posture', g: 'manusia', name: 'Berat Badan & Perawakan', en: 'Hefty & Posture', icon: '🧍', items: [
+  ["fat","/fæt/","gemuk (kurang sopan)","The cat is getting fat."],
+  ["overweight","/ˌoʊvərˈweɪt/","kelebihan berat badan (lebih sopan)","He is a little overweight."],
+  ["plump","/plʌmp/","montok, gemuk berisi","The baby has plump cheeks."],
+  ["thin","/θɪn/","kurus","She is tall and thin."],
+  ["slim","/slɪm/","langsing","She looks slim in that dress."],
+  ["skinny","/ˈskɪni/","kurus kering","He was skinny as a kid."],
+  ["tall","/tɔːl/","tinggi","My brother is very tall."],
+  ["short","/ʃɔːrt/","pendek","I'm shorter than my sister."],
+  ["stocky","/ˈstɑːki/","pendek kekar","The wrestler is short and stocky."],
+  ["muscular","/ˈmʌskjələr/","berotot","He has muscular arms."],
+  ["well-built","/ˌwɛlˈbɪlt/","berbadan tegap","The soldier is well-built."]
+]},
+{ no: 43, id: 'general-appearance', g: 'manusia', name: 'Penampilan Umum', en: 'General Appearance', icon: '🪞', items: [
+  ["handsome","/ˈhænsəm/","tampan","He is a handsome young man."],
+  ["beautiful","/ˈbjuːtɪfəl/","cantik, indah","She looks beautiful today."],
+  ["pretty","/ˈprɪti/","manis, cantik","What a pretty girl!"],
+  ["cute","/kjuːt/","imut, lucu","The puppy is so cute."],
+  ["good-looking","/ˌɡʊdˈlʊkɪŋ/","rupawan","Her husband is good-looking."],
+  ["attractive","/əˈtræktɪv/","menarik","She has an attractive smile."],
+  ["ugly","/ˈʌɡli/","jelek","That building is ugly."],
+  ["neat","/niːt/","rapi","He always looks neat."],
+  ["scruffy","/ˈskrʌfi/","lusuh, berantakan","He looked scruffy after the trip."],
+  ["elegant","/ˈɛlɪɡənt/","anggun, elegan","She wore an elegant kebaya."]
+]},
+{ no: 44, id: 'feelings', g: 'manusia', name: 'Perasaan & Situasi', en: 'Feeling & Situation', icon: '😊', items: [
+  ["happy","/ˈhæpi/","senang, bahagia","I'm happy to see you."],
+  ["sad","/sæd/","sedih","She felt sad after the movie."],
+  ["angry","/ˈæŋɡri/","marah","Don't be angry with me."],
+  ["afraid","/əˈfreɪd/","takut","I'm afraid of snakes."],
+  ["nervous","/ˈnɜːrvəs/","gugup","I'm nervous about the interview."],
+  ["bored","/bɔːrd/","bosan","I'm bored at home."],
+  ["tired","/taɪərd/","lelah","I'm tired after work."],
+  ["surprised","/sərˈpraɪzd/","terkejut","I was surprised by the news."],
+  ["embarrassed","/ɪmˈbærəst/","malu","I was embarrassed when I fell."],
+  ["worried","/ˈwɜːrid/","khawatir","My mother is worried about me."],
+  ["lonely","/ˈloʊnli/","kesepian","He feels lonely in the new city."],
+  ["proud","/praʊd/","bangga","I'm proud of you."]
+]},
+{ no: 45, id: 'conjunction', g: 'grammar', name: 'Kata Sambung', en: 'Conjunction', icon: '🔗', items: [
+  ["and","/ænd/","dan","I like tea and coffee."],
+  ["but","/bʌt/","tetapi","It's cheap but good."],
+  ["or","/ɔːr/","atau","Tea or coffee?"],
+  ["so","/soʊ/","jadi, sehingga","It rained, so we stayed home."],
+  ["because","/bɪˈkɔːz/","karena","I'm late because of the traffic."],
+  ["although","/ɔːlˈðoʊ/","meskipun","Although it was late, she kept working."],
+  ["if","/ɪf/","jika","If it rains, we'll stay inside."],
+  ["when","/wɛn/","ketika","Call me when you arrive."],
+  ["while","/waɪl/","sementara, selagi","He listens to music while studying."],
+  ["unless","/ənˈlɛs/","kecuali jika","You'll fail unless you study."],
+  ["since","/sɪns/","sejak; karena","I've lived here since 2020."]
+]},
+{ no: 46, id: 'interjection', g: 'grammar', name: 'Kata Seru', en: 'Interjection', icon: '❗', items: [
+  ["Wow!","/waʊ/","Wah! (kagum)","Wow! That's amazing!"],
+  ["Oops!","/ʊps/","Ups! (salah kecil)","Oops! I dropped my pen."],
+  ["Ouch!","/aʊtʃ/","Aduh! (sakit)","Ouch! That hurts!"],
+  ["Hey!","/heɪ/","Hei!","Hey! Wait for me!"],
+  ["Hooray!","/hʊˈreɪ/","Hore!","Hooray! We won!"],
+  ["Oh!","/oʊ/","Oh!","Oh! I didn't know that."],
+  ["Ugh!","/ʌɡ/","Ih! / Hih! (jijik, kesal)","Ugh! This smells bad."],
+  ["Shh!","/ʃ/","Sst! (minta diam)","Shh! The baby is sleeping."],
+  ["Yikes!","/jaɪks/","Astaga! (kaget, takut)","Yikes! A spider!"],
+  ["Alas!","/əˈlæs/","Aduhai! / Sayang sekali! (sastra)","Alas, it was too late."]
+]},
+{ no: 47, id: 'preposition', g: 'grammar', name: 'Kata Depan', en: 'Preposition', icon: '📦', items: [
+  ["in","/ɪn/","di dalam","The keys are in my bag."],
+  ["on","/ɑːn/","di atas (menempel)","The book is on the table."],
+  ["at","/æt/","di (titik/tempat tertentu)","I'm at the office."],
+  ["under","/ˈʌndər/","di bawah","The cat is under the bed."],
+  ["above","/əˈbʌv/","di atas (tidak menempel)","The lamp is above the table."],
+  ["between","/bɪˈtwiːn/","di antara (dua)","Sit between Ani and Budi."],
+  ["behind","/bɪˈhaɪnd/","di belakang","The car is behind the house."],
+  ["in front of","/ɪn frʌnt əv/","di depan","Wait in front of the bank."],
+  ["next to","/nɛkst tuː/","di samping","The bank is next to the school."],
+  ["from","/frʌm/","dari","I'm from Semarang."],
+  ["to","/tuː/","ke","I go to work by bus."],
+  ["with","/wɪð/","dengan, bersama","I live with my parents."]
+]},
+{ no: 48, id: 'building-place', g: 'harian', name: 'Bangunan & Tempat', en: 'Building & Place', icon: '🏢', items: [
+  ["hospital","/ˈhɑːspɪtəl/","rumah sakit","He was taken to the hospital."],
+  ["school","/skuːl/","sekolah","The school is near my house."],
+  ["mosque","/mɑːsk/","masjid","He prays at the mosque."],
+  ["church","/tʃɜːrtʃ/","gereja","They go to church on Sunday."],
+  ["temple","/ˈtɛmpəl/","pura, kuil, candi","Borobudur is a famous Buddhist temple."],
+  ["market","/ˈmɑːrkɪt/","pasar","I buy vegetables at the market."],
+  ["bank","/bæŋk/","bank","I need to go to the bank."],
+  ["library","/ˈlaɪbrɛri/","perpustakaan","Be quiet in the library."],
+  ["post office","/poʊst ˈɔːfɪs/","kantor pos","Send this letter at the post office."],
+  ["museum","/mjuˈziːəm/","museum","We visited the museum on Sunday."],
+  ["stadium","/ˈsteɪdiəm/","stadion","The stadium was full of fans."],
+  ["airport","/ˈɛrpɔːrt/","bandara","I'll pick you up at the airport."]
+]},
+{ no: 49, id: 'transportation', g: 'harian', name: 'Alat-alat Transportasi', en: 'Means of Transportation', icon: '🚆', items: [
+  ["car","/kɑːr/","mobil","He drives a red car."],
+  ["motorcycle","/ˈmoʊtərsaɪkəl/","sepeda motor","I go to work by motorcycle."],
+  ["bicycle","/ˈbaɪsɪkəl/","sepeda","She rides a bicycle to school."],
+  ["bus","/bʌs/","bus","Let's take the bus."],
+  ["train","/treɪn/","kereta api","The train leaves at eight."],
+  ["airplane","/ˈɛrpleɪn/","pesawat terbang","The airplane is landing."],
+  ["ship","/ʃɪp/","kapal","The ship sailed to Bali."],
+  ["boat","/boʊt/","perahu","We rented a boat."],
+  ["truck","/trʌk/","truk","A truck is carrying rice."],
+  ["helicopter","/ˈhɛlɪkɑːptər/","helikopter","A helicopter flew over the city."],
+  ["pedicab","/ˈpɛdikæb/","becak","We took a pedicab to the market."]
+]},
+{ no: 50, id: 'verb', g: 'grammar', name: 'Kata Kerja', en: 'Verb', icon: '⚡', items: [
+  ["eat","/iːt/","makan","We eat rice every day."],
+  ["drink","/drɪŋk/","minum","Drink more water."],
+  ["sleep","/sliːp/","tidur","I sleep at ten."],
+  ["read","/riːd/","membaca","She reads a novel."],
+  ["write","/raɪt/","menulis","Write your name here."],
+  ["speak","/spiːk/","berbicara","Do you speak English?"],
+  ["listen","/ˈlɪsən/","mendengarkan","Listen to the teacher."],
+  ["buy","/baɪ/","membeli","I want to buy a new phone."],
+  ["sell","/sɛl/","menjual","They sell fresh fish."],
+  ["learn","/lɜːrn/","belajar (mempelajari)","I learn English online."],
+  ["teach","/tiːtʃ/","mengajar","She teaches math."],
+  ["understand","/ˌʌndərˈstænd/","mengerti","Do you understand?"]
+]},
+/* ===================== 51 – 60 ===================== */
+{ no: 51, id: 'noun', g: 'grammar', name: 'Kata Benda', en: 'Noun', icon: '🏷️', items: [
+  ["house","/haʊs/","rumah","Their house is big."],
+  ["table","/ˈteɪbəl/","meja","Put it on the table."],
+  ["water","/ˈwɔːtər/","air","Can I have some water?"],
+  ["money","/ˈmʌni/","uang","I saved my money."],
+  ["friend","/frɛnd/","teman","She is my best friend."],
+  ["tree","/triː/","pohon","There's a mango tree in our yard."],
+  ["door","/dɔːr/","pintu","Close the door, please."],
+  ["window","/ˈwɪndoʊ/","jendela","Open the window."],
+  ["city","/ˈsɪti/","kota","Semarang is a big city."],
+  ["knowledge","/ˈnɑːlɪdʒ/","pengetahuan","Knowledge is power."],
+  ["time","/taɪm/","waktu","Time is money."]
+]},
+{ no: 52, id: 'adjective', g: 'grammar', name: 'Kata Sifat', en: 'Adjective', icon: '✨', items: [
+  ["big","/bɪɡ/","besar","That's a big house."],
+  ["small","/smɔːl/","kecil","I live in a small room."],
+  ["new","/nuː/","baru","I bought new shoes."],
+  ["old","/oʊld/","tua, lama","This is an old book."],
+  ["good","/ɡʊd/","baik, bagus","Good job!"],
+  ["bad","/bæd/","buruk, jelek","The weather is bad today."],
+  ["expensive","/ɪkˈspɛnsɪv/","mahal","This bag is too expensive."],
+  ["cheap","/tʃiːp/","murah","Street food is cheap."],
+  ["easy","/ˈiːzi/","mudah","The test was easy."],
+  ["difficult","/ˈdɪfɪkəlt/","sulit","English grammar can be difficult."],
+  ["clean","/kliːn/","bersih","Keep your room clean."],
+  ["dirty","/ˈdɜːrti/","kotor","My shoes are dirty."]
+]},
+{ no: 53, id: 'tree-flower', g: 'alam', name: 'Pohon & Bunga', en: 'Tree & Flower', icon: '🌸', items: [
+  ["rose","/roʊz/","bunga mawar","He gave her a red rose."],
+  ["jasmine","/ˈdʒæzmɪn/","bunga melati","Jasmine is Indonesia's national flower."],
+  ["orchid","/ˈɔːrkɪd/","bunga anggrek","The moon orchid is beautiful."],
+  ["sunflower","/ˈsʌnflaʊər/","bunga matahari","Sunflowers follow the sun."],
+  ["lotus","/ˈloʊtəs/","bunga teratai","A lotus floats on the pond."],
+  ["hibiscus","/hɪˈbɪskəs/","bunga sepatu","The hibiscus is bright red."],
+  ["coconut tree","/ˈkoʊkənʌt triː/","pohon kelapa","Coconut trees grow near the beach."],
+  ["banyan tree","/ˈbænjən triː/","pohon beringin","The banyan tree is very old."],
+  ["bamboo","/bæmˈbuː/","bambu","Bamboo grows very fast."],
+  ["teak","/tiːk/","pohon jati","Teak wood is strong."],
+  ["pine tree","/paɪn triː/","pohon pinus","Pine trees grow in the mountains."]
+]},
+{ no: 54, id: 'food-taste', g: 'harian', name: 'Makanan, Minuman & Rasa', en: 'Food, Beverage & Taste', icon: '🍜', items: [
+  ["rice","/raɪs/","nasi, beras","I eat rice three times a day."],
+  ["bread","/brɛd/","roti","I had bread for breakfast."],
+  ["noodles","/ˈnuːdəlz/","mi","Fried noodles are my favorite."],
+  ["egg","/ɛɡ/","telur","I'd like a fried egg."],
+  ["coffee","/ˈkɔːfi/","kopi","I drink coffee every morning."],
+  ["tea","/tiː/","teh","Sweet iced tea, please."],
+  ["juice","/dʒuːs/","jus","Avocado juice is popular here."],
+  ["milk","/mɪlk/","susu","Children need milk."],
+  ["sweet","/swiːt/","manis","This cake is too sweet."],
+  ["sour","/saʊər/","asam","Lime is sour."],
+  ["salty","/ˈsɔːlti/","asin","The soup is too salty."],
+  ["bitter","/ˈbɪtər/","pahit","Black coffee tastes bitter."],
+  ["spicy","/ˈspaɪsi/","pedas","I love spicy food."],
+  ["bland","/blænd/","hambar","The food is bland, add some salt."]
+]},
+{ no: 55, id: 'national-day', g: 'harian', name: 'Hari Nasional', en: 'National Day', icon: '🎉', items: [
+  ["Independence Day","/ˌɪndɪˈpɛndəns deɪ/","Hari Kemerdekaan (17 Agustus)","Indonesia's Independence Day is on August 17th."],
+  ["Heroes' Day","/ˈhɪroʊz deɪ/","Hari Pahlawan (10 November)","We remember our heroes on Heroes' Day."],
+  ["Kartini Day","/kɑːrˈtiːni deɪ/","Hari Kartini (21 April)","Girls wear kebaya on Kartini Day."],
+  ["National Education Day","/ˈnæʃənəl ˌɛdʒʊˈkeɪʃən deɪ/","Hari Pendidikan Nasional (2 Mei)","National Education Day honors Ki Hajar Dewantara."],
+  ["National Awakening Day","/ˈnæʃənəl əˈweɪkənɪŋ deɪ/","Hari Kebangkitan Nasional (20 Mei)","National Awakening Day is on May 20th."],
+  ["Pancasila Day","/pantʃaˈsila deɪ/","Hari Lahir Pancasila (1 Juni)","Pancasila Day is a public holiday."],
+  ["Youth Pledge Day","/juːθ plɛdʒ deɪ/","Hari Sumpah Pemuda (28 Oktober)","Youth Pledge Day celebrates unity."],
+  ["National Batik Day","/ˈnæʃənəl ˈbɑːtɪk deɪ/","Hari Batik Nasional (2 Oktober)","Everyone wears batik on National Batik Day."],
+  ["Mother's Day","/ˈmʌðərz deɪ/","Hari Ibu (22 Desember)","I gave my mom flowers on Mother's Day."],
+  ["Labour Day","/ˈleɪbər deɪ/","Hari Buruh (1 Mei)","Labour Day is on May 1st."]
+]},
+{ no: 56, id: 'noun-ment', g: 'grammar', name: 'Kata Benda Akhiran -Ment', en: 'Noun -Ment', icon: '🧩', items: [
+  ["development","/dɪˈvɛləpmənt/","perkembangan, pembangunan (develop)","Economic development is important."],
+  ["agreement","/əˈɡriːmənt/","persetujuan, perjanjian (agree)","We signed an agreement."],
+  ["government","/ˈɡʌvərnmənt/","pemerintah (govern)","The government built a new road."],
+  ["payment","/ˈpeɪmənt/","pembayaran (pay)","Payment is due on Friday."],
+  ["improvement","/ɪmˈpruːvmənt/","peningkatan, perbaikan (improve)","There is a big improvement in your English."],
+  ["movement","/ˈmuːvmənt/","gerakan (move)","The movement started in 1908."],
+  ["achievement","/əˈtʃiːvmənt/","prestasi, pencapaian (achieve)","Graduating was a great achievement."],
+  ["management","/ˈmænɪdʒmənt/","manajemen, pengelolaan (manage)","She studies business management."],
+  ["announcement","/əˈnaʊnsmənt/","pengumuman (announce)","Listen to the announcement."],
+  ["employment","/ɪmˈplɔɪmənt/","pekerjaan, lapangan kerja (employ)","The factory creates employment."]
+]},
+{ no: 57, id: 'noun-ance', g: 'grammar', name: 'Kata Benda Akhiran -Ce/-Ance', en: 'Noun -Ce/-Ance', icon: '🧱', items: [
+  ["importance","/ɪmˈpɔːrtəns/","kepentingan, pentingnya (important)","Don't forget the importance of sleep."],
+  ["performance","/pərˈfɔːrməns/","penampilan, kinerja (perform)","Her performance was excellent."],
+  ["appearance","/əˈpɪrəns/","penampilan, kemunculan (appear)","Don't judge by appearance."],
+  ["assistance","/əˈsɪstəns/","bantuan (assist)","Thank you for your assistance."],
+  ["attendance","/əˈtɛndəns/","kehadiran (attend)","Attendance is checked every day."],
+  ["distance","/ˈdɪstəns/","jarak (distant)","What's the distance to Solo?"],
+  ["difference","/ˈdɪfrəns/","perbedaan (different)","What's the difference?"],
+  ["independence","/ˌɪndɪˈpɛndəns/","kemerdekaan (independent)","Indonesia declared independence in 1945."],
+  ["patience","/ˈpeɪʃəns/","kesabaran (patient)","Learning needs patience."],
+  ["silence","/ˈsaɪləns/","keheningan (silent)","There was silence in the room."]
+]},
+{ no: 58, id: 'adjective-ous', g: 'grammar', name: 'Kata Sifat Akhiran -Ous', en: 'Adjective -Ous', icon: '🌀', items: [
+  ["famous","/ˈfeɪməs/","terkenal (fame)","Bali is famous for its beaches."],
+  ["dangerous","/ˈdeɪndʒərəs/","berbahaya (danger)","It's dangerous to swim here."],
+  ["delicious","/dɪˈlɪʃəs/","lezat","This rendang is delicious!"],
+  ["various","/ˈvɛriəs/","berbagai, bermacam-macam (vary)","They sell various kinds of fruit."],
+  ["curious","/ˈkjʊriəs/","penasaran, ingin tahu","Children are naturally curious."],
+  ["serious","/ˈsɪriəs/","serius","Are you serious?"],
+  ["jealous","/ˈdʒɛləs/","cemburu, iri","He's jealous of his brother."],
+  ["mysterious","/mɪˈstɪriəs/","misterius (mystery)","A mysterious man knocked on the door."],
+  ["enormous","/ɪˈnɔːrməs/","sangat besar","The whale was enormous."],
+  ["poisonous","/ˈpɔɪzənəs/","beracun (poison)","Some mushrooms are poisonous."],
+  ["courageous","/kəˈreɪdʒəs/","berani (courage)","The courageous soldier saved his friends."]
+]},
+{ no: 59, id: 'adjective-ful', g: 'grammar', name: 'Kata Sifat Akhiran -Ful', en: 'Adjective -Ful', icon: '🌈', items: [
+  ["useful","/ˈjuːsfəl/","berguna (use)","This app is very useful."],
+  ["careful","/ˈkɛrfəl/","hati-hati (care)","Be careful on the road."],
+  ["wonderful","/ˈwʌndərfəl/","menakjubkan (wonder)","We had a wonderful time."],
+  ["powerful","/ˈpaʊərfəl/","kuat, berkuasa (power)","A powerful storm hit the coast."],
+  ["successful","/səkˈsɛsfəl/","sukses, berhasil (success)","She is a successful businesswoman."],
+  ["peaceful","/ˈpiːsfəl/","damai, tenang (peace)","The village is peaceful."],
+  ["colorful","/ˈkʌlərfəl/","berwarna-warni (color)","Batik is colorful."],
+  ["painful","/ˈpeɪnfəl/","menyakitkan (pain)","The injection was painful."],
+  ["thankful","/ˈθæŋkfəl/","berterima kasih, bersyukur (thank)","I'm thankful for your help."],
+  ["harmful","/ˈhɑːrmfəl/","berbahaya, merugikan (harm)","Smoking is harmful to your health."]
+]},
+{ no: 60, id: 'health', g: 'manusia', name: 'Kesehatan & Penyakit', en: 'Health & Disease', icon: '🩺', items: [
+  ["healthy","/ˈhɛlθi/","sehat","Eat healthy food."],
+  ["sick","/sɪk/","sakit","I'm sick today."],
+  ["fever","/ˈfiːvər/","demam","The child has a high fever."],
+  ["cough","/kɔːf/","batuk","I have a bad cough."],
+  ["flu","/fluː/","flu","I caught the flu."],
+  ["headache","/ˈhɛdeɪk/","sakit kepala","I have a headache."],
+  ["toothache","/ˈtuːθeɪk/","sakit gigi","A toothache kept me awake."],
+  ["stomachache","/ˈstʌməkeɪk/","sakit perut","Too much chili gave me a stomachache."],
+  ["diarrhea","/ˌdaɪəˈriːə/","diare","Drink lots of water if you have diarrhea."],
+  ["dengue fever","/ˈdɛŋɡi ˈfiːvər/","demam berdarah","Dengue fever spreads through mosquitoes."],
+  ["medicine","/ˈmɛdɪsən/","obat","Take this medicine after meals."],
+  ["injection","/ɪnˈdʒɛkʃən/","suntikan","The nurse gave me an injection."]
+]},
+/* ===================== 61 – 73 ===================== */
+{ no: 61, id: 'sport', g: 'harian', name: 'Olahraga', en: 'Sport', icon: '⚽', items: [
+  ["football","/ˈfʊtbɔːl/","sepak bola","Football is popular in Indonesia."],
+  ["badminton","/ˈbædmɪntən/","bulu tangkis","Indonesia is strong in badminton."],
+  ["basketball","/ˈbæskɪtbɔːl/","bola basket","He plays basketball after school."],
+  ["volleyball","/ˈvɑːlibɔːl/","bola voli","We play volleyball on the beach."],
+  ["swimming","/ˈswɪmɪŋ/","renang","Swimming is good exercise."],
+  ["table tennis","/ˈteɪbəl ˈtɛnɪs/","tenis meja","Table tennis needs fast reflexes."],
+  ["cycling","/ˈsaɪklɪŋ/","bersepeda","Cycling on Sunday morning is fun."],
+  ["martial arts","/ˈmɑːrʃəl ɑːrts/","bela diri","Pencak silat is a martial art."],
+  ["athletics","/æθˈlɛtɪks/","atletik","She competes in athletics."],
+  ["chess","/tʃɛs/","catur","Let's play chess."]
+]},
+{ no: 62, id: 'weapon', g: 'harian', name: 'Senjata', en: 'Weapon', icon: '🛡️', items: [
+  ["sword","/sɔːrd/","pedang","The knight carried a sword."],
+  ["spear","/spɪr/","tombak","Ancient warriors used spears."],
+  ["bow","/boʊ/","busur","He shot the arrow with a bow."],
+  ["arrow","/ˈæroʊ/","anak panah","The arrow hit the target."],
+  ["shield","/ʃiːld/","perisai","The soldier raised his shield."],
+  ["dagger","/ˈdæɡər/","belati","A dagger is a short knife."],
+  ["keris","/ˈkɛrɪs/","keris","The keris is a traditional Javanese weapon."],
+  ["cannon","/ˈkænən/","meriam","The old cannon is in the museum."],
+  ["rifle","/ˈraɪfəl/","senapan","Soldiers carry rifles."],
+  ["axe","/æks/","kapak","He cut the wood with an axe."]
+]},
+{ no: 63, id: 'direction', g: 'dasar', name: 'Arah', en: 'Direction', icon: '🧭', items: [
+  ["north","/nɔːrθ/","utara","The mountain is to the north."],
+  ["south","/saʊθ/","selatan","Yogyakarta is south of Semarang."],
+  ["east","/iːst/","timur","The sun rises in the east."],
+  ["west","/wɛst/","barat","The sun sets in the west."],
+  ["northeast","/ˌnɔːrθˈiːst/","timur laut","The wind is blowing from the northeast."],
+  ["northwest","/ˌnɔːrθˈwɛst/","barat laut","The city is northwest of here."],
+  ["southeast","/ˌsaʊθˈiːst/","tenggara","Indonesia is in Southeast Asia."],
+  ["southwest","/ˌsaʊθˈwɛst/","barat daya","Drive southwest for ten kilometers."],
+  ["left","/lɛft/","kiri","Turn left at the corner."],
+  ["right","/raɪt/","kanan","The bank is on your right."],
+  ["straight ahead","/streɪt əˈhɛd/","lurus terus","Go straight ahead."],
+  ["turn around","/tɜːrn əˈraʊnd/","putar balik","Turn around at the next junction."]
+]},
+{ no: 64, id: 'business', g: 'harian', name: 'Perniagaan', en: 'Business', icon: '📈', items: [
+  ["profit","/ˈprɑːfɪt/","keuntungan, laba","The company made a big profit."],
+  ["loss","/lɔːs/","kerugian","The shop suffered a loss."],
+  ["capital","/ˈkæpɪtəl/","modal","You need capital to start a business."],
+  ["revenue","/ˈrɛvənuː/","pendapatan","Revenue grew 10% this year."],
+  ["customer","/ˈkʌstəmər/","pelanggan","The customer is always right."],
+  ["invoice","/ˈɪnvɔɪs/","faktur, tagihan","Please send me the invoice."],
+  ["discount","/ˈdɪskaʊnt/","potongan harga","Can I get a discount?"],
+  ["investment","/ɪnˈvɛstmənt/","investasi","Education is the best investment."],
+  ["contract","/ˈkɑːntrækt/","kontrak","Read the contract carefully."],
+  ["shareholder","/ˈʃɛrhoʊldər/","pemegang saham","Shareholders receive dividends."],
+  ["stock","/stɑːk/","saham; stok barang","He bought shares of stock."]
+]},
+{ no: 65, id: 'government', g: 'harian', name: 'Pemerintahan', en: 'Government', icon: '🏛️', items: [
+  ["president","/ˈprɛzɪdənt/","presiden","The president gave a speech."],
+  ["vice president","/vaɪs ˈprɛzɪdənt/","wakil presiden","The vice president visited the city."],
+  ["minister","/ˈmɪnɪstər/","menteri","The minister of education spoke today."],
+  ["governor","/ˈɡʌvərnər/","gubernur","The governor of Central Java opened the event."],
+  ["regent","/ˈriːdʒənt/","bupati","The regent visited the village."],
+  ["mayor","/ˈmeɪər/","wali kota","The mayor opened the new park."],
+  ["parliament","/ˈpɑːrləmənt/","parlemen, DPR","Parliament passed the new law."],
+  ["law","/lɔː/","hukum, undang-undang","Everyone must obey the law."],
+  ["election","/ɪˈlɛkʃən/","pemilihan umum","The election is held every five years."],
+  ["citizen","/ˈsɪtɪzən/","warga negara","Every citizen has the right to vote."],
+  ["constitution","/ˌkɑːnstɪˈtuːʃən/","undang-undang dasar","The 1945 Constitution is Indonesia's basic law."]
+]},
+{ no: 66, id: 'natural-disaster', g: 'alam', name: 'Bencana Alam', en: 'Natural Disaster', icon: '🌋', items: [
+  ["earthquake","/ˈɜːrθkweɪk/","gempa bumi","The earthquake shook the city."],
+  ["flood","/flʌd/","banjir","The flood destroyed many houses."],
+  ["tsunami","/tsuːˈnɑːmi/","tsunami","The tsunami hit Aceh in 2004."],
+  ["landslide","/ˈlændslaɪd/","tanah longsor","Heavy rain caused a landslide."],
+  ["volcanic eruption","/vɑːlˈkænɪk ɪˈrʌpʃən/","letusan gunung berapi","Mount Merapi's eruption covered villages in ash."],
+  ["forest fire","/ˈfɔːrɪst faɪər/","kebakaran hutan","Forest fires cause thick haze."],
+  ["tornado","/tɔːrˈneɪdoʊ/","tornado, angin puting beliung","A tornado damaged the roofs."],
+  ["hurricane","/ˈhɜːrɪkeɪn/","badai topan (Atlantik)","The hurricane hit Florida."],
+  ["avalanche","/ˈævəlæntʃ/","longsoran salju","The avalanche blocked the road."],
+  ["evacuation","/ɪˌvækjuˈeɪʃən/","evakuasi, pengungsian","The evacuation started at night."]
+]},
+{ no: 67, id: 'mathematics', g: 'harian', name: 'Ilmu Hitung', en: 'Mathematics', icon: '➗', items: [
+  ["2 + 3 = 5","","Penjumlahan — two plus three equals five","Two plus three equals five.","two plus three equals five"],
+  ["9 − 4 = 5","","Pengurangan — nine minus four equals five","Nine minus four equals five.","nine minus four equals five"],
+  ["3 × 4 = 12","","Perkalian — three times four equals twelve","Three times four equals twelve.","three times four equals twelve"],
+  ["12 ÷ 3 = 4","","Pembagian — twelve divided by three equals four","Twelve divided by three equals four.","twelve divided by three equals four"],
+  ["5²","","Lima kuadrat — five squared","Five squared is twenty-five.","five squared"],
+  ["2³","","Dua pangkat tiga — two cubed","Two cubed is eight.","two cubed"],
+  ["√16 = 4","","Akar kuadrat — the square root of sixteen is four","The square root of sixteen is four.","the square root of sixteen is four"],
+  ["½","","Pecahan — one half (setengah)","Cut the cake in half.","one half"],
+  ["0.75","","Desimal — zero point seven five","The answer is zero point seven five.","zero point seven five"],
+  ["25%","","Persen — twenty-five percent","There's a twenty-five percent discount.","twenty-five percent"]
+]},
+{ no: 68, id: 'math-terms', g: 'harian', name: 'Istilah Matematika', en: 'Mathematics Terminology', icon: '📏', items: [
+  ["addition","/əˈdɪʃən/","penjumlahan","Addition is the first thing kids learn."],
+  ["subtraction","/səbˈtrækʃən/","pengurangan","Subtraction means taking away."],
+  ["multiplication","/ˌmʌltɪplɪˈkeɪʃən/","perkalian","Learn the multiplication table."],
+  ["division","/dɪˈvɪʒən/","pembagian","Long division is tricky."],
+  ["fraction","/ˈfrækʃən/","pecahan","One third is a fraction."],
+  ["equation","/ɪˈkweɪʒən/","persamaan","Solve the equation for x."],
+  ["even number","/ˈiːvən ˈnʌmbər/","bilangan genap","Four is an even number."],
+  ["odd number","/ɑːd ˈnʌmbər/","bilangan ganjil","Seven is an odd number."],
+  ["average","/ˈævərɪdʒ/","rata-rata","The average score is 80."],
+  ["triangle","/ˈtraɪæŋɡəl/","segitiga","A triangle has three sides."],
+  ["square","/skwɛr/","persegi; kuadrat","A square has four equal sides."],
+  ["circle","/ˈsɜːrkəl/","lingkaran","Draw a circle."]
+]},
+{ no: 69, id: 'differences', g: 'grammar', name: 'Beberapa Perbedaan Kata', en: 'Some Differences', icon: '⚖️', items: [
+  ["borrow vs lend","/ˈbɑːroʊ/ · /lɛnd/","borrow = meminjam (dari orang); lend = meminjamkan (ke orang)","Can I borrow your pen? — Sure, I'll lend it to you.","borrow, lend"],
+  ["say vs tell","/seɪ/ · /tɛl/","say = mengatakan sesuatu; tell = memberi tahu seseorang","She said hello. She told me the news.","say, tell"],
+  ["see, look, watch","/siː/ · /lʊk/ · /wɑːtʃ/","see = melihat (tak sengaja); look = memandang; watch = menonton/mengamati","Look at the board. We watch TV at night.","see, look, watch"],
+  ["hear vs listen","/hɪr/ · /ˈlɪsən/","hear = mendengar (tak sengaja); listen = mendengarkan (sengaja)","I heard a noise. Listen to the music.","hear, listen"],
+  ["make vs do","/meɪk/ · /duː/","make = membuat (menghasilkan); do = melakukan (tugas/aktivitas)","Make a cake. Do your homework.","make, do"],
+  ["bring vs take","/brɪŋ/ · /teɪk/","bring = membawa ke sini; take = membawa ke sana","Bring me water. Take this to your mom.","bring, take"],
+  ["few vs little","/fjuː/ · /ˈlɪtəl/","few = sedikit (bisa dihitung); little = sedikit (tak bisa dihitung)","a few books, a little water","few, little"],
+  ["many vs much","/ˈmɛni/ · /mʌtʃ/","many = banyak (bisa dihitung); much = banyak (tak bisa dihitung)","many friends, much money","many, much"],
+  ["lose vs loose","/luːz/ · /luːs/","lose = kehilangan, kalah; loose = longgar","Don't lose your keys. My shirt is loose.","lose, loose"],
+  ["affect vs effect","/əˈfɛkt/ · /ɪˈfɛkt/","affect = memengaruhi (kerja); effect = dampak (benda)","Stress affects sleep. It has a bad effect.","affect, effect"]
+]},
+{ no: 70, id: 'daily-expressions', g: 'ekspresi', name: 'Ungkapan Sehari-hari', en: 'Daily Expressions', icon: '💬', items: [
+  ["Good morning!","/ɡʊd ˈmɔːrnɪŋ/","Selamat pagi!","Good morning, everyone!"],
+  ["How are you?","/haʊ ɑːr juː/","Apa kabar?","Hi Dina, how are you?"],
+  ["I'm fine, thank you.","/aɪm faɪn ˈθæŋk juː/","Saya baik, terima kasih.","I'm fine, thank you. And you?"],
+  ["Thank you very much.","/ˈθæŋk juː ˈvɛri mʌtʃ/","Terima kasih banyak.","Thank you very much for your help."],
+  ["You're welcome.","/jʊr ˈwɛlkəm/","Sama-sama.","— Thanks! — You're welcome."],
+  ["Excuse me.","/ɪkˈskjuːz miː/","Permisi. / Maaf (menarik perhatian).","Excuse me, where is the toilet?"],
+  ["I'm sorry.","/aɪm ˈsɑːri/","Saya minta maaf.","I'm sorry I'm late."],
+  ["Never mind.","/ˈnɛvər maɪnd/","Tidak apa-apa. / Lupakan saja.","Never mind, it's not important."],
+  ["What's up?","/wʌts ʌp/","Ada apa? / Apa kabar? (santai)","Hey bro, what's up?"],
+  ["See you later!","/siː juː ˈleɪtər/","Sampai jumpa nanti!","Bye, see you later!"],
+  ["Take care.","/teɪk kɛr/","Hati-hati. / Jaga diri.","Take care on your way home."],
+  ["Congratulations!","/kənˌɡrætʃəˈleɪʃənz/","Selamat! (atas keberhasilan)","Congratulations on your graduation!"]
+]},
+{ no: 71, id: 'mc-speech', g: 'ekspresi', name: 'Naskah MC dan Pidato', en: 'Text MC and Speech', icon: '🎙️', items: [
+  ["Ladies and gentlemen","/ˈleɪdiz ənd ˈdʒɛntəlmən/","Bapak-bapak dan Ibu-ibu sekalian","Good morning, ladies and gentlemen."],
+  ["Distinguished guests","/dɪˈstɪŋɡwɪʃt ɡɛsts/","Para tamu yang terhormat","Distinguished guests, welcome to our event."],
+  ["First of all, let us thank God","","Pertama-tama, marilah kita panjatkan puji syukur kepada Tuhan","First of all, let us thank God Almighty for His blessings."],
+  ["It is an honor to stand here","","Merupakan suatu kehormatan bagi saya berdiri di sini","It is an honor to stand here in front of you."],
+  ["Allow me to introduce","/əˈlaʊ miː tuː ˌɪntrəˈduːs/","Izinkan saya memperkenalkan","Allow me to introduce our keynote speaker."],
+  ["Let's move on to the next agenda","","Mari kita lanjutkan ke acara berikutnya","Let's move on to the next agenda: the speech."],
+  ["Please welcome","/pliːz ˈwɛlkəm/","Kepada … kami persilakan","Please welcome the headmaster, Mr. Budi."],
+  ["Let's give a big round of applause","","Mari kita beri tepuk tangan yang meriah","Let's give a big round of applause for our winners!"],
+  ["I apologize for any mistakes","","Mohon maaf atas segala kekurangan","I apologize for any mistakes I have made."],
+  ["That's all from me","","Sekian dari saya","That's all from me. Thank you."],
+  ["Thank you for your attention","","Terima kasih atas perhatiannya","Thank you for your kind attention."]
+]},
+{ no: 72, id: 'irregular-verbs', g: 'grammar', name: 'Kata Kerja Tidak Beraturan', en: 'Irregular Verbs - V1, V2, V3', icon: '🔀', items: [
+  ["go – went – gone","/ɡoʊ/ · /wɛnt/ · /ɡɔːn/","pergi","She went to school yesterday."],
+  ["eat – ate – eaten","/iːt/ · /eɪt/ · /ˈiːtən/","makan","I have eaten breakfast."],
+  ["see – saw – seen","/siː/ · /sɔː/ · /siːn/","melihat","I saw him at the mall."],
+  ["take – took – taken","/teɪk/ · /tʊk/ · /ˈteɪkən/","mengambil","He took my umbrella."],
+  ["write – wrote – written","/raɪt/ · /roʊt/ · /ˈrɪtən/","menulis","She has written three books."],
+  ["buy – bought – bought","/baɪ/ · /bɔːt/ · /bɔːt/","membeli","I bought a new bag."],
+  ["come – came – come","/kʌm/ · /keɪm/ · /kʌm/","datang","They came late."],
+  ["drink – drank – drunk","/drɪŋk/ · /dræŋk/ · /drʌŋk/","minum","He drank a glass of milk."],
+  ["begin – began – begun","/bɪˈɡɪn/ · /bɪˈɡæn/ · /bɪˈɡʌn/","mulai","The class has begun."],
+  ["speak – spoke – spoken","/spiːk/ · /spoʊk/ · /ˈspoʊkən/","berbicara","English is spoken worldwide."],
+  ["give – gave – given","/ɡɪv/ · /ɡeɪv/ · /ˈɡɪvən/","memberi","She gave me a gift."],
+  ["put – put – put","/pʊt/ · /pʊt/ · /pʊt/","meletakkan","I put the keys on the table."],
+  ["sleep – slept – slept","/sliːp/ · /slɛpt/ · /slɛpt/","tidur","I slept for eight hours."]
+]},
+{ no: 73, id: 'regular-verbs', g: 'grammar', name: 'Kata Kerja Beraturan', en: 'Regular Verbs - V1, V2, V3', icon: '➡️', items: [
+  ["work – worked – worked","/wɜːrk/ · /wɜːrkt/","bekerja (akhiran -ed dibaca /t/)","I worked late last night."],
+  ["play – played – played","/pleɪ/ · /pleɪd/","bermain (akhiran -ed dibaca /d/)","We played football yesterday."],
+  ["visit – visited – visited","/ˈvɪzɪt/ · /ˈvɪzɪtɪd/","mengunjungi (akhiran -ed dibaca /ɪd/)","We visited Borobudur last year."],
+  ["study – studied – studied","/ˈstʌdi/ · /ˈstʌdid/","belajar (y → ied)","She studied all night."],
+  ["cook – cooked – cooked","/kʊk/ · /kʊkt/","memasak","Mom cooked fried rice."],
+  ["watch – watched – watched","/wɑːtʃ/ · /wɑːtʃt/","menonton","I watched a movie."],
+  ["clean – cleaned – cleaned","/kliːn/ · /kliːnd/","membersihkan","He cleaned his room."],
+  ["open – opened – opened","/ˈoʊpən/ · /ˈoʊpənd/","membuka","She opened the window."],
+  ["stop – stopped – stopped","/stɑːp/ · /stɑːpt/","berhenti (konsonan digandakan)","The bus stopped suddenly."],
+  ["want – wanted – wanted","/wɑːnt/ · /ˈwɑːntɪd/","ingin","I wanted to go home."],
+  ["help – helped – helped","/hɛlp/ · /hɛlpt/","membantu","He helped me carry the box."],
+  ["listen – listened – listened","/ˈlɪsən/ · /ˈlɪsənd/","mendengarkan","We listened to the radio."]
+]}
+];
+</script>
+<!-- ======================== AKHIR DATA KOSAKATA ======================== -->
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- Utilitas ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const norm = s => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const shuffle = arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const cssKey = k => (window.CSS && CSS.escape) ? CSS.escape(k) : k.replace(/["\\]/g, '\\$&');
+
+const ICONS = {
+  book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
+  grid: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  star: '<polygon points="12 2.5 15 8.6 21.7 9.6 16.8 14.3 18 21 12 17.8 6 21 7.2 14.3 2.3 9.6 9 8.6 12 2.5"/>',
+  cards: '<rect x="3" y="7" width="13" height="14" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/>',
+  speaker: '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/>',
+  back: '<polyline points="15 18 9 12 15 6"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  x: '<path d="M18 6 6 18M6 6l12 12"/>',
+  chevR: '<polyline points="9 18 15 12 9 6"/>',
+  chevD: '<polyline points="6 9 12 15 18 9"/>',
+  chevL: '<polyline points="15 18 9 12 15 6"/>',
+  check: '<polyline points="20 6 9 17 4 12"/>',
+  refresh: '<path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/>',
+  flip: '<path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
+  download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>'
+};
+const ic = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
+
+/* ---------- Penyimpanan ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('kosakata.' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('kosakata.' + k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ---------- Indeks data ---------- */
+const GROUP_BY_ID = new Map(GROUPS.map(g => [g.id, g]));
+const CAT_BY_ID = new Map();
+const WORDS = [];
+const WORD_BY_KEY = new Map();
+CATEGORIES.sort((a, b) => a.no - b.no);
+CATEGORIES.forEach(cat => {
+  if (!GROUP_BY_ID.has(cat.g)) console.warn('Grup tidak dikenal pada kategori', cat.no, cat.g);
+  CAT_BY_ID.set(cat.id, cat);
+  cat.words = [];
+  (cat.items || []).forEach(it => {
+    if (!Array.isArray(it) || !it[0]) return;
+    const w = { key: cat.id + '|' + it[0], en: String(it[0]), ipa: it[1] || '', ar: it[2] || '', ex: it[3] || '', say: it[4] || '', cat };
+    if (WORD_BY_KEY.has(w.key)) { console.warn('Kata duplikat dilewati:', w.key); return; }
+    w.nEn = norm(w.en); w.nAr = norm(w.ar);
+    WORD_BY_KEY.set(w.key, w); WORDS.push(w); cat.words.push(w);
+  });
+});
+const sayText = w => w.say || w.en.replace(/\s[–—]\s/g, ', ').replace(/\s\/\s/g, ', ');
+
+/* ---------- State ---------- */
+let favs = new Set(store.get('favs', []).filter(k => WORD_BY_KEY.has(k)));
+const settings = Object.assign({
+  theme: null, accent: 'US', rate: 0.9,
+  pMode: 'quiz', pSrc: 'all', pDir: 'en-id', pN: 10, pShuffle: true
+}, store.get('settings', {}));
+if (!settings.theme) settings.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+if (settings.pSrc !== 'all' && settings.pSrc !== 'fav' && !CAT_BY_ID.has(settings.pSrc)) settings.pSrc = 'all';
+const saveSettings = () => store.set('settings', settings);
+const saveFavs = () => store.set('favs', Array.from(favs));
+
+let searchQuery = '';
+let catFilter = '';
+let session = null;
+let currentTab = 'home';
+let internalNav = false;
+let deferredInstall = null;
+const view = $('#view');
+
+/* ---------- Tema & aksen ---------- */
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', settings.theme);
+  const m = $('meta[name=theme-color]');
+  if (m) m.setAttribute('content', settings.theme === 'dark' ? '#0B1117' : '#F4F6F8');
+  $('#btn-theme').innerHTML = ic(settings.theme === 'dark' ? 'sun' : 'moon');
+}
+function applyAccent() {
+  $('#btn-accent').innerHTML = `<span class="lbl">Aksen</span>${settings.accent === 'UK' ? '🇬🇧 UK' : '🇺🇸 US'}`;
+}
+
+/* ---------- Text-to-Speech ---------- */
+const TTS = 'speechSynthesis' in window;
+let voices = [];
+let warnedVoice = false;
+function loadVoices() { try { voices = speechSynthesis.getVoices() || []; } catch (e) { voices = []; } }
+if (TTS) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+function pickVoice(lang) {
+  const L = lang.toLowerCase();
+  const same = voices.filter(v => (v.lang || '').replace('_', '-').toLowerCase() === L);
+  if (same.length) return same.find(v => /google|natural|enhanced|premium|siri/i.test(v.name)) || same[0];
+  return null;
+}
+function speak(text, btn) {
+  if (!TTS) { toast('Browser ini belum mendukung audio (Text-to-Speech).'); return; }
+  if (!text) return;
+  try { speechSynthesis.cancel(); } catch (e) {}
+  const lang = settings.accent === 'UK' ? 'en-GB' : 'en-US';
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = lang; u.rate = settings.rate; u.pitch = 1;
+  if (!voices.length) loadVoices();
+  const v = pickVoice(lang);
+  if (v) u.voice = v;
+  else {
+    const anyEn = voices.find(x => /^en/i.test(x.lang || ''));
+    if (anyEn) u.voice = anyEn;
+    if (voices.length && !warnedVoice) { warnedVoice = true; toast(`Suara aksen ${settings.accent} tidak tersedia di HP ini, memakai suara Inggris lain.`); }
+  }
+  $$('.playing').forEach(b => b.classList.remove('playing'));
+  if (btn) btn.classList.add('playing');
+  const done = () => btn && btn.classList.remove('playing');
+  u.onend = done; u.onerror = done;
+  setTimeout(() => { try { speechSynthesis.speak(u); } catch (e) { done(); } }, 60);
+  setTimeout(done, 8000);
+}
+
+/* ---------- Toast ---------- */
+let toastTimer;
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+/* ---------- Komponen ---------- */
+function hl(text, q) {
+  const t = String(text); const qq = (q || '').trim().toLowerCase();
+  if (!qq) return esc(t);
+  const i = t.toLowerCase().indexOf(qq);
+  if (i < 0) return esc(t);
+  return esc(t.slice(0, i)) + '<mark>' + esc(t.slice(i, i + qq.length)) + '</mark>' + esc(t.slice(i + qq.length));
+}
+function wordCard(w, o = {}) {
+  const fav = favs.has(w.key);
+  const k = esc(w.key);
+  const meta = [];
+  if (o.showCat) meta.push(`<a class="w-cat" href="#/k/${esc(w.cat.id)}">${w.cat.icon} ${esc(w.cat.name)}</a>`);
+  if (w.ex) meta.push(`<span class="w-more">Contoh ${ic('chevD')}</span>`);
+  return `<article class="word${w.ex ? ' has-ex' : ''}${o.open && w.ex ? ' open' : ''}">
+    <div class="word-main"${w.ex ? ' data-act="expand"' : ''}>
+      <div class="word-text">
+        <div class="w-en">${hl(w.en, o.q)}</div>
+        ${w.ipa ? `<div class="w-ipa">${esc(w.ipa)}</div>` : ''}
+        <div class="w-ar">${hl(w.ar, o.q)}</div>
+        ${meta.length ? `<div class="w-meta">${meta.join('')}</div>` : ''}
+      </div>
+      <div class="word-btns">
+        <button class="icon-btn speak" data-act="speak" data-key="${k}" aria-label="Dengarkan ${esc(w.en)}">${ic('speaker')}</button>
+        <button class="icon-btn star${fav ? ' on' : ''}" data-act="fav" data-key="${k}" aria-pressed="${fav}" aria-label="Tandai favorit">${ic('star')}</button>
+      </div>
+    </div>
+    ${w.ex ? `<div class="word-ex"><p>${esc(w.ex)}</p><button class="mini-btn" data-act="speak-ex" data-key="${k}">${ic('speaker')} Dengar contoh</button></div>` : ''}
+  </article>`;
+}
+function emptyState(icon, title, text, action) {
+  return `<div class="empty"><div class="ei">${icon}</div><b>${esc(title)}</b><p>${esc(text)}</p>${action || ''}</div>`;
+}
+function catRow(c) {
+  const g = GROUP_BY_ID.get(c.g) || {};
+  return `<a class="cat-row" href="#/k/${esc(c.id)}" style="--gc:${g.color || '#888'}">
+    <span class="cat-ic">${c.icon}<span class="cat-no">${c.no}</span></span>
+    <span class="cat-txt"><b>${esc(c.name)}</b><small>${esc(c.en)}</small></span>
+    <span class="cat-count">${c.words.length} kata</span>${ic('chevR')}
+  </a>`;
+}
+function setBar(title, sub, back) {
+  const b = $('#btn-back');
+  b.hidden = !back; b.dataset.href = back || ''; b.innerHTML = ic('back');
+  $('#brand-logo').hidden = !!back;
+  $('#bar-title').textContent = title || 'KosaKata';
+  $('#bar-sub').textContent = sub || 'Kamus Inggris ⇄ Indonesia';
+  document.title = (title ? title + ' · ' : '') + 'KosaKata';
+}
+function updateFavBadge() {
+  const b = $('#fav-badge');
+  b.hidden = favs.size === 0; b.textContent = favs.size > 99 ? '99+' : favs.size;
+}
+
+/* ---------- Halaman: Kamus (Home) ---------- */
+function greet() {
+  const h = new Date().getHours();
+  return h < 11 ? 'Selamat pagi 👋' : h < 15 ? 'Selamat siang 👋' : h < 18 ? 'Selamat sore 👋' : 'Selamat malam 👋';
+}
+function wordOfDay() {
+  const pool = WORDS.filter(w => w.ipa && w.en.length <= 18 && !/[–\/]/.test(w.en));
+  const d = new Date(); const day = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
+  return pool[(day * 7919) % pool.length];
+}
+function renderHome() {
+  setBar();
+  const w = wordOfDay();
+  const fav = w && favs.has(w.key);
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  const showIOSTip = isIOS && !standalone && !store.get('iosTipClosed', false);
+  view.innerHTML = `
+    <section class="hero">
+      <p class="eyebrow">${greet()}</p>
+      <h1>Cari & hafalkan kosakata Inggris–Indonesia</h1>
+    </section>
+    <div class="search">
+      <label class="search-field">${ic('search')}
+        <input id="q" type="search" enterkeyhint="search" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Cari kata Inggris / Indonesia…" value="${esc(searchQuery)}" aria-label="Cari kata">
+        <button class="icon-btn" id="q-clear" data-act="clear-search" aria-label="Hapus pencarian"${searchQuery ? '' : ' hidden'}>${ic('x')}</button>
+      </label>
+    </div>
+    <div id="results"></div>
+    <div id="home-body">
+      ${w ? `<div class="card wod">
+        <p class="eyebrow">✦ Kata hari ini</p>
+        <div class="wod-en">${esc(w.en)}</div>
+        ${w.ipa ? `<div class="wod-ipa">${esc(w.ipa)}</div>` : ''}
+        <div class="wod-ar">${esc(w.ar)}</div>
+        ${w.ex ? `<div class="wod-ex">“${esc(w.ex)}”</div>` : ''}
+        <div class="wod-actions">
+          <button class="chip-btn speak" data-act="speak" data-key="${esc(w.key)}">${ic('speaker')} Dengar</button>
+          <button class="chip-btn star${fav ? ' on' : ''}" data-act="fav" data-key="${esc(w.key)}">${ic('star')} Favorit</button>
+          <a class="chip-btn" href="#/k/${esc(w.cat.id)}" aria-label="Buka kategori ${esc(w.cat.name)}">${w.cat.icon} Lihat</a>
+        </div>
+      </div>` : ''}
+      <div class="stats">
+        <a class="card stat" href="#/kategori"><b>${CATEGORIES.length}</b><span>Kategori</span></a>
+        <div class="card stat"><b>${WORDS.length}</b><span>Kosakata</span></div>
+        <a class="card stat" href="#/favorit"><b>${favs.size}</b><span>Favorit</span></a>
+      </div>
+      <div id="install-slot">${installCard()}</div>
+      ${showIOSTip ? `<div class="card install"><p><b>Pasang di iPhone</b>Ketuk tombol Share ⬆️ di Safari lalu pilih “Add to Home Screen”.</p><button class="icon-btn" data-act="close-ios" aria-label="Tutup">${ic('x')}</button></div>` : ''}
+      <h3 class="sec-title">Jelajahi per grup</h3>
+      <div class="group-grid">
+        ${GROUPS.map(g => {
+          const cats = CATEGORIES.filter(c => c.g === g.id);
+          const n = cats.reduce((s, c) => s + c.words.length, 0);
+          return `<a class="card group-tile" href="#/kategori?g=${g.id}" style="--gc:${g.color}"><span class="gi">${g.icon}</span><b>${esc(g.name)}</b><small>${cats.length} kategori · ${n} kata</small></a>`;
+        }).join('')}
+      </div>
+      <h3 class="sec-title">Latihan cepat</h3>
+      <div class="quick">
+        <button class="card quick-btn" data-act="start" data-mode="quiz" data-src="all"><span class="qi">🎯</span><span>Kuis acak<small>${settings.pN} soal campuran</small></span></button>
+        <button class="card quick-btn" data-act="start" data-mode="flash" data-src="fav"><span class="qi">🃏</span><span>Flashcard<small>Kata favoritmu</small></span></button>
+      </div>
+    </div>`;
+  const inp = $('#q');
+  inp.addEventListener('input', () => { searchQuery = inp.value; $('#q-clear').hidden = !searchQuery; renderResults(); });
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') inp.blur(); });
+  renderResults();
+}
+function installCard() {
+  if (!deferredInstall) return '';
+  return `<div class="card install"><p><b>Pasang aplikasi</b>Tambahkan KosaKata ke layar utama HP.</p><button class="btn primary" data-act="install">${ic('download')} Pasang</button></div>`;
+}
+function searchWords(q) {
+  const n = norm(q).trim();
+  if (!n) return [];
+  const re = new RegExp('(^|[^a-z0-9])' + reEsc(n));
+  const out = [];
+  for (const w of WORDS) {
+    let s = 0;
+    if (w.nEn === n || w.nAr === n) s = 100;
+    else if (w.nEn.startsWith(n)) s = 85;
+    else if (w.nAr.startsWith(n)) s = 80;
+    else if (re.test(w.nEn)) s = 65;
+    else if (re.test(w.nAr)) s = 60;
+    else if (w.nEn.includes(n)) s = 45;
+    else if (w.nAr.includes(n)) s = 40;
+    if (s) out.push([s, w]);
+  }
+  out.sort((a, b) => b[0] - a[0] || a[1].en.length - b[1].en.length);
+  return out.map(x => x[1]);
+}
+function renderResults() {
+  const box = $('#results'); const body = $('#home-body');
+  if (!box) return;
+  const q = searchQuery.trim();
+  if (!q) { box.innerHTML = ''; body.hidden = false; return; }
+  body.hidden = true;
+  const res = searchWords(q);
+  const LIMIT = 60;
+  if (!res.length) {
+    box.innerHTML = emptyState('🔍', 'Kata tidak ditemukan', `Belum ada "${q}" di kamus. Coba ejaan lain, atau cari dalam Bahasa Indonesia.`);
+    return;
+  }
+  box.innerHTML = `<p class="res-meta">${res.length > LIMIT ? `Menampilkan ${LIMIT} dari ${res.length} hasil` : `${res.length} hasil`} untuk “${esc(q)}”</p>
+    <div class="word-list">${res.slice(0, LIMIT).map(w => wordCard(w, { showCat: true, q })).join('')}</div>`;
+}
+
+/* ---------- Halaman: Kategori ---------- */
+function renderCats(g) {
+  if (g !== 'all' && !GROUP_BY_ID.has(g)) g = 'all';
+  setBar('Kategori', `${CATEGORIES.length} kategori · ${WORDS.length} kata`);
+  const chips = [{ id: 'all', name: 'Semua', icon: '✨' }].concat(GROUPS).map(x =>
+    `<a class="chip${x.id === g ? ' on' : ''}" href="#/kategori${x.id === 'all' ? '' : '?g=' + x.id}">${x.icon} ${esc(x.name)}</a>`).join('');
+  view.innerHTML = `
+    <div class="chips-wrap"><div class="chips" id="chips">${chips}</div></div>
+    <label class="filter-field">${ic('search')}<input id="cat-filter" type="search" autocomplete="off" placeholder="Saring nama kategori…" value="${esc(catFilter)}" aria-label="Saring kategori"></label>
+    <div id="cat-list"></div>`;
+  const f = $('#cat-filter');
+  f.addEventListener('input', () => { catFilter = f.value; drawCatList(g); });
+  drawCatList(g);
+  const on = $('#chips .chip.on');
+  if (on) on.scrollIntoView({ inline: 'center', block: 'nearest' });
+}
+function drawCatList(g) {
+  const f = norm(catFilter).trim();
+  const groups = g === 'all' ? GROUPS : [GROUP_BY_ID.get(g)];
+  let html = '';
+  groups.forEach(gr => {
+    const cats = CATEGORIES.filter(c => c.g === gr.id && (!f || norm(c.no + ' ' + c.name + ' ' + c.en).includes(f)));
+    if (!cats.length) return;
+    html += `<h3 class="sec-title"><span>${gr.icon}</span>${esc(gr.name)}<small>${cats.length}</small></h3><div class="cat-list">${cats.map(catRow).join('')}</div>`;
+  });
+  $('#cat-list').innerHTML = html || emptyState('🗂️', 'Kategori tidak ditemukan', 'Coba kata kunci lain.');
+}
+
+/* ---------- Halaman: Detail kategori ---------- */
+function renderCat(cat) {
+  const g = GROUP_BY_ID.get(cat.g) || {};
+  setBar(cat.name, cat.en, '#/kategori' + (cat.g ? '?g=' + cat.g : ''));
+  const idx = CATEGORIES.indexOf(cat);
+  const prev = CATEGORIES[idx - 1], next = CATEGORIES[idx + 1];
+  const hasEx = cat.words.some(w => w.ex);
+  view.innerHTML = `
+    <section class="cat-head" style="--gc:${g.color || '#888'}">
+      <div class="cat-big">${cat.icon}</div>
+      <div><p class="eyebrow">#${cat.no} · ${esc(g.name || '')}</p><h1>${esc(cat.name)}</h1><p class="muted">${esc(cat.en)} · ${cat.words.length} kata</p></div>
+    </section>
+    <div class="btn-row">
+      <button class="btn primary" data-act="start" data-mode="flash" data-src="${esc(cat.id)}">🃏 Flashcard</button>
+      <button class="btn soft" data-act="start" data-mode="quiz" data-src="${esc(cat.id)}">🎯 Kuis</button>
+    </div>
+    <div class="list-tools"><span>Ketuk kartu untuk melihat contoh</span>${hasEx ? '<button class="text-btn" data-act="toggle-all">Buka semua</button>' : ''}</div>
+    <div class="word-list">${cat.words.map(w => wordCard(w)).join('') || emptyState('📭', 'Belum ada kata', 'Tambahkan kosakata di bagian DATA pada file.')}</div>
+    <div class="pager">
+      ${prev ? `<a class="card" href="#/k/${esc(prev.id)}">← Sebelumnya<b>${prev.icon} ${esc(prev.name)}</b></a>` : '<span></span>'}
+      ${next ? `<a class="card next" href="#/k/${esc(next.id)}">Berikutnya →<b>${next.icon} ${esc(next.name)}</b></a>` : '<span></span>'}
+    </div>`;
+}
+
+/* ---------- Halaman: Favorit ---------- */
+function renderFav() {
+  setBar('Favorit', 'Kata yang belum hafal');
+  const list = WORDS.filter(w => favs.has(w.key));
+  if (!list.length) {
+    view.innerHTML = emptyState('⭐', 'Belum ada favorit', 'Ketuk ikon bintang pada kata yang belum kamu hafal. Semua kata bertanda bintang akan muncul di sini untuk dilatih.',
+      '<a class="btn primary" href="#/kategori">Jelajahi kategori</a>');
+    return;
+  }
+  view.innerHTML = `
+    <div class="btn-row">
+      <button class="btn primary" data-act="start" data-mode="flash" data-src="fav">🃏 Flashcard</button>
+      <button class="btn soft" data-act="start" data-mode="quiz" data-src="fav">🎯 Kuis</button>
+    </div>
+    <div class="list-tools"><span>${list.length} kata ditandai</span><button class="text-btn" data-act="clear-favs">Hapus semua</button></div>
+    <div class="word-list">${list.map(w => wordCard(w, { showCat: true })).join('')}</div>`;
+}
+
+/* ---------- Halaman: Latihan (pengaturan) ---------- */
+function srcOptions(sel) {
+  let h = `<option value="all"${sel === 'all' ? ' selected' : ''}>🎲 Semua kategori (acak)</option>`;
+  h += `<option value="fav"${sel === 'fav' ? ' selected' : ''}>⭐ Favorit / belum hafal (${favs.size})</option>`;
+  GROUPS.forEach(g => {
+    h += `<optgroup label="${esc(g.icon + ' ' + g.name)}">`;
+    CATEGORIES.filter(c => c.g === g.id).forEach(c => {
+      h += `<option value="${esc(c.id)}"${sel === c.id ? ' selected' : ''}>${c.no}. ${esc(c.name)} (${c.words.length})</option>`;
+    });
+    h += '</optgroup>';
+  });
+  return h;
+}
+function renderPracticeSetup() {
+  setBar('Latihan', 'Flashcard & kuis');
+  const quiz = settings.pMode === 'quiz';
+  const seg = (k, opts) => `<div class="seg">${opts.map(([v, l]) => `<button data-act="pset" data-k="${k}" data-v="${v}" class="${String(settings[k]) === String(v) ? 'on' : ''}">${l}</button>`).join('')}</div>`;
+  view.innerHTML = `
+    <h3 class="sec-title">Pilih mode</h3>
+    <div class="mode-grid">
+      <button class="mode-card${!quiz ? ' on' : ''}" data-act="pset" data-k="pMode" data-v="flash"><span class="mi">🃏</span><b>Flashcard</b><small>Kartu bolak-balik untuk menghafal</small></button>
+      <button class="mode-card${quiz ? ' on' : ''}" data-act="pset" data-k="pMode" data-v="quiz"><span class="mi">🎯</span><b>Kuis</b><small>Tebak arti dengan 4 pilihan jawaban</small></button>
+    </div>
+    <h3 class="sec-title">Sumber kata</h3>
+    <div class="select-wrap"><select id="p-src" aria-label="Sumber kata">${srcOptions(settings.pSrc)}</select>${ic('chevD')}</div>
+    ${quiz ? `
+      <h3 class="sec-title">Arah soal</h3>
+      ${seg('pDir', [['en-id', 'Inggris → Indo'], ['id-en', 'Indo → Inggris']])}
+      <h3 class="sec-title">Jumlah soal</h3>
+      ${seg('pN', [[5, '5'], [10, '10'], [20, '20']])}
+      <p class="hint">Jika kata di sumber lebih sedikit, jumlah soal menyesuaikan.</p>` : `
+      <h3 class="sec-title">Opsi</h3>
+      <label class="switch-row"><span>Acak urutan kartu</span><input type="checkbox" id="p-shuffle"${settings.pShuffle ? ' checked' : ''}><span class="switch"></span></label>
+      <p class="hint">Tombol “Belum hafal” otomatis menandai kata ke Favorit. “Sudah hafal” menghapusnya dari Favorit.</p>`}
+    <div class="start-wrap"><button class="btn primary block lg" data-act="start">Mulai Latihan</button></div>`;
+  $('#p-src').addEventListener('change', e => { settings.pSrc = e.target.value; saveSettings(); });
+  const sh = $('#p-shuffle');
+  if (sh) sh.addEventListener('change', () => { settings.pShuffle = sh.checked; saveSettings(); });
+}
+
+/* ---------- Sesi latihan ---------- */
+function getPool(src) {
+  if (src === 'fav') return { pool: WORDS.filter(w => favs.has(w.key)), label: 'Favorit' };
+  if (src === 'all') return { pool: WORDS.slice(), label: 'Semua kategori' };
+  const c = CAT_BY_ID.get(src);
+  return c ? { pool: c.words.slice(), label: c.name } : { pool: [], label: '' };
+}
+function makeQuestion(w, pool, dir) {
+  const field = dir === 'en-id' ? 'ar' : 'en';
+  const answer = w[field];
+  const seen = new Set([norm(answer)]);
+  const opts = [answer];
+  const cands = shuffle(w.cat.words).concat(shuffle(pool), shuffle(WORDS));
+  for (const c of cands) {
+    if (opts.length >= 4) break;
+    const v = c[field]; const nv = norm(v);
+    if (!v || seen.has(nv)) continue;
+    seen.add(nv); opts.push(v);
+  }
+  return { w, prompt: dir === 'en-id' ? w.en : w.ar, answer, options: shuffle(opts) };
+}
+function startPractice(mode, src) {
+  mode = mode || settings.pMode; src = src || settings.pSrc;
+  settings.pMode = mode; settings.pSrc = src; saveSettings();
+  const { pool, label } = getPool(src);
+  if (!pool.length) { toast(src === 'fav' ? 'Favorit masih kosong. Tandai kata dengan ⭐ dulu.' : 'Belum ada kata di sumber ini.'); return; }
+  if (mode === 'flash') {
+    let cards = (settings.pShuffle || src === 'all') ? shuffle(pool) : pool;
+    if (src === 'all') cards = cards.slice(0, 30);
+    session = { mode, src, label, cards, i: 0, flipped: false, known: 0, unknown: 0 };
+  } else {
+    if (pool.length < 2) { toast('Minimal 2 kata untuk membuat kuis.'); return; }
+    const n = Math.min(settings.pN, pool.length);
+    const qs = shuffle(pool).slice(0, n).map(w => makeQuestion(w, pool, settings.pDir));
+    session = { mode, src, label, dir: settings.pDir, qs, i: 0, score: 0, answered: false, wrong: [] };
+  }
+  if (location.hash === '#/latihan/sesi') { route(); window.scrollTo(0, 0); }
+  else location.hash = '#/latihan/sesi';
+}
+function renderSession() {
+  setBar(session.label, session.mode === 'flash' ? 'Flashcard' : 'Kuis', '#/latihan');
+  if (session.mode === 'flash') renderFlash(); else renderQuiz();
+}
+function renderFlash() {
+  const s = session;
+  if (s.i >= s.cards.length) return renderFlashDone();
+  const w = s.cards[s.i]; const k = esc(w.key);
+  view.innerHTML = `
+    <div class="sess-top"><span>${s.i + 1} / ${s.cards.length}</span><div class="progress"><i style="width:${(s.i / s.cards.length) * 100}%"></i></div></div>
+    <div class="flip${s.flipped ? ' flipped' : ''}" id="flip" data-act="flip">
+      <div class="flip-inner">
+        <div class="face front">
+          <span class="face-tag">${w.cat.icon} ${esc(w.cat.name)}</span>
+          <div class="fc-en">${esc(w.en)}</div>
+          ${w.ipa ? `<div class="fc-ipa">${esc(w.ipa)}</div>` : ''}
+          <button class="round-btn" data-act="speak" data-key="${k}" aria-label="Dengarkan">${ic('speaker')}</button>
+          <span class="face-hint">Ketuk kartu untuk melihat arti</span>
+        </div>
+        <div class="face back">
+          <span class="face-tag">Arti</span>
+          <div class="fc-ar">${esc(w.ar)}</div>
+          ${w.ex ? `<div class="fc-ex">“${esc(w.ex)}”</div>` : ''}
+          <span class="face-hint">Ketuk untuk membalik</span>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="btn ghost" data-act="fc-prev" aria-label="Sebelumnya"${s.i === 0 ? ' disabled' : ''}>${ic('chevL')}</button>
+      <button class="btn soft" data-act="flip">${ic('flip')} Balik kartu</button>
+      <button class="btn ghost" data-act="fc-next" aria-label="Berikutnya">${ic('chevR')}</button>
+    </div>
+    <div class="fc-judge">
+      <button class="btn bad" data-act="fc-judge" data-v="0">★ Belum hafal</button>
+      <button class="btn ok" data-act="fc-judge" data-v="1">${ic('check')} Sudah hafal</button>
+    </div>
+    <p class="hint center">Geser kartu ke kiri / kanan untuk pindah.</p>`;
+  attachSwipe($('#flip'));
+}
+function attachSwipe(el) {
+  let x0 = null, y0 = null;
+  el.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  el.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+    x0 = null;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      el.dataset.swiped = '1'; setTimeout(() => { delete el.dataset.swiped; }, 350);
+      flashMove(dx < 0 ? 1 : -1);
+    }
+  }, { passive: true });
+}
+function flashMove(d) {
+  const s = session; if (!s || s.mode !== 'flash') return;
+  const ni = s.i + d;
+  if (ni < 0) return;
+  s.i = ni; s.flipped = false; renderFlash();
+}
+function renderFlashDone() {
+  const s = session;
+  view.innerHTML = `<div class="result">
+      <div style="font-size:64px">🎉</div>
+      <h2>Selesai!</h2>
+      <p>Kamu sudah melihat ${s.cards.length} kartu dari “${esc(s.label)}”.</p>
+      <div class="stats" style="grid-template-columns:1fr 1fr">
+        <div class="card stat"><b style="color:var(--ok)">${s.known}</b><span>Sudah hafal</span></div>
+        <div class="card stat"><b style="color:var(--danger)">${s.unknown}</b><span>Belum hafal</span></div>
+      </div>
+      <div class="stack">
+        <button class="btn primary block lg" data-act="restart">${ic('refresh')} Ulangi kartu</button>
+        ${favs.size ? '<button class="btn soft block" data-act="start" data-mode="quiz" data-src="fav">🎯 Kuis kata favorit</button>' : ''}
+        <a class="btn ghost block" href="#/latihan">Pilih latihan lain</a>
+      </div></div>`;
+}
+function renderQuiz() {
+  const s = session;
+  if (s.i >= s.qs.length) return renderQuizDone();
+  const q = s.qs[s.i];
+  s.answered = false;
+  view.innerHTML = `
+    <div class="sess-top"><span>${s.i + 1}/${s.qs.length}</span><div class="progress"><i style="width:${(s.i / s.qs.length) * 100}%"></i></div><span class="score-pill">✓ ${s.score}</span></div>
+    <div class="card q-card">
+      <span class="face-tag">${s.dir === 'en-id' ? 'Apa arti kata ini?' : 'Apa bahasa Inggrisnya?'}</span>
+      <div class="q-prompt${s.dir === 'id-en' ? ' idn' : ''}">${esc(q.prompt)}</div>
+      ${s.dir === 'en-id' && q.w.ipa ? `<div class="fc-ipa">${esc(q.w.ipa)}</div>` : ''}
+      ${s.dir === 'en-id' ? `<button class="round-btn" data-act="speak" data-key="${esc(q.w.key)}" aria-label="Dengarkan">${ic('speaker')}</button>` : ''}
+    </div>
+    <div class="options">${q.options.map((o, i) => `<button class="opt" data-act="answer" data-i="${i}"><span class="opt-l">${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('')}</div>
+    <div id="q-feedback"></div>`;
+}
+function answerQuiz(i) {
+  const s = session; if (!s || s.answered) return;
+  s.answered = true;
+  const q = s.qs[s.i];
+  const chosen = q.options[i];
+  const ok = chosen === q.answer;
+  $$('.opt').forEach((b, j) => {
+    b.disabled = true;
+    if (q.options[j] === q.answer) b.classList.add('correct');
+    else if (j === i) b.classList.add('wrong');
+  });
+  if (ok) s.score++; else s.wrong.push(q.w);
+  const last = s.i === s.qs.length - 1;
+  $('#q-feedback').innerHTML = `
+    <div class="feedback ${ok ? 'good' : 'bad'}">
+      <b>${ok ? 'Benar! 🎉' : 'Kurang tepat 😅'}</b>
+      <span><strong>${esc(q.w.en)}</strong> ${q.w.ipa ? esc(q.w.ipa) + ' ' : ''}= ${esc(q.w.ar)}</span>
+    </div>
+    <div class="next-wrap"><button class="btn primary block lg" data-act="q-next">${last ? 'Lihat hasil' : 'Lanjut'} ${ic('chevR')}</button></div>`;
+  $('.score-pill').textContent = '✓ ' + s.score;
+  if (ok && navigator.vibrate) { try { navigator.vibrate(15); } catch (e) {} }
+  const fb = $('#q-feedback');
+  if (fb.getBoundingClientRect().bottom > window.innerHeight - 80) fb.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+function renderQuizDone() {
+  const s = session;
+  const pct = Math.round((s.score / s.qs.length) * 100);
+  const [emo, msg] = pct === 100 ? ['🏆', 'Sempurna!'] : pct >= 80 ? ['🎉', 'Hebat!'] : pct >= 50 ? ['👍', 'Lumayan, terus latihan!'] : ['💪', 'Jangan menyerah, coba lagi!'];
+  view.innerHTML = `<div class="result">
+      <div class="ring" style="--p:${pct}"><div><span>${pct}%<small>${s.score}/${s.qs.length} benar</small></span></div></div>
+      <h2>${emo} ${msg}</h2>
+      <p>Kuis “${esc(s.label)}”</p>
+    </div>
+    ${s.wrong.length ? `
+      <div class="list-tools"><span>${s.wrong.length} jawaban salah</span><button class="text-btn" data-act="fav-wrong">★ Tandai semua belum hafal</button></div>
+      <div class="word-list">${s.wrong.map(w => wordCard(w, { showCat: true })).join('')}</div>` : ''}
+    <div class="stack">
+      <button class="btn primary block lg" data-act="restart">${ic('refresh')} Ulangi kuis</button>
+      <a class="btn ghost block" href="#/latihan">Pilih latihan lain</a>
+    </div>`;
+}
+
+/* ---------- Router ---------- */
+const scrollMem = {};
+let currentHash = location.hash || '#/';
+function parseHash() {
+  const h = (location.hash || '').replace(/^#/, '') || '/';
+  const qi = h.indexOf('?');
+  const path = qi >= 0 ? h.slice(0, qi) : h;
+  const qs = new URLSearchParams(qi >= 0 ? h.slice(qi + 1) : '');
+  return { parts: path.split('/').filter(Boolean), qs };
+}
+function route() {
+  const { parts, qs } = parseHash();
+  try { if (TTS) speechSynthesis.cancel(); } catch (e) {}
+  if (parts[0] === 'kategori') { currentTab = 'cats'; renderCats(qs.get('g') || 'all'); }
+  else if (parts[0] === 'k') {
+    const c = CAT_BY_ID.get(parts[1]);
+    if (!c) { location.replace('#/kategori'); return; }
+    currentTab = 'cats'; renderCat(c);
+  }
+  else if (parts[0] === 'favorit') { currentTab = 'fav'; renderFav(); }
+  else if (parts[0] === 'latihan') {
+    currentTab = 'practice';
+    if (parts[1] === 'sesi') { if (!session) { location.replace('#/latihan'); return; } renderSession(); }
+    else renderPracticeSetup();
+  }
+  else { currentTab = 'home'; renderHome(); }
+  $$('.nav-item').forEach(a => {
+    const on = a.dataset.tab === currentTab;
+    a.classList.toggle('active', on);
+    if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
+  updateFavBadge();
+}
+window.addEventListener('hashchange', () => {
+  scrollMem[currentHash] = window.scrollY;
+  currentHash = location.hash || '#/';
+  internalNav = true;
+  route();
+  const keep = /^#\/(kategori(\?.*)?|favorit)?$/.test(currentHash) || currentHash === '#';
+  window.scrollTo(0, keep ? (scrollMem[currentHash] || 0) : 0);
+});
+
+/* ---------- Event global (delegasi) ---------- */
+document.addEventListener('click', e => {
+  if (e.target.closest('a[href]')) return;
+  const el = e.target.closest('[data-act]');
+  if (!el) return;
+  const act = el.dataset.act;
+  const w = el.dataset.key ? WORD_BY_KEY.get(el.dataset.key) : null;
+  switch (act) {
+    case 'speak': if (w) speak(sayText(w), el); break;
+    case 'speak-ex': if (w) speak(w.ex, el); break;
+    case 'fav': if (w) toggleFav(w.key); break;
+    case 'expand': el.closest('.word').classList.toggle('open'); break;
+    case 'toggle-all': {
+      const cards = $$('.word.has-ex'); const open = !cards.every(c => c.classList.contains('open'));
+      cards.forEach(c => c.classList.toggle('open', open)); el.textContent = open ? 'Tutup semua' : 'Buka semua'; break;
+    }
+    case 'back': if (internalNav && history.length > 1) history.back(); else location.hash = el.dataset.href || '#/'; break;
+    case 'theme': settings.theme = settings.theme === 'dark' ? 'light' : 'dark'; saveSettings(); applyTheme(); break;
+    case 'accent':
+      settings.accent = settings.accent === 'US' ? 'UK' : 'US'; saveSettings(); applyAccent(); warnedVoice = false;
+      toast(settings.accent === 'UK' ? '🇬🇧 Aksen British dipilih' : '🇺🇸 Aksen Amerika dipilih'); break;
+    case 'clear-search': searchQuery = ''; { const q = $('#q'); q.value = ''; q.focus(); } $('#q-clear').hidden = true; renderResults(); break;
+    case 'clear-favs':
+      if (confirm('Hapus semua kata dari Favorit?')) { favs.clear(); saveFavs(); renderFav(); updateFavBadge(); toast('Favorit dikosongkan'); }
+      break;
+    case 'pset': {
+      const k = el.dataset.k; settings[k] = k === 'pN' ? Number(el.dataset.v) : el.dataset.v; saveSettings(); renderPracticeSetup(); break;
+    }
+    case 'start': startPractice(el.dataset.mode, el.dataset.src); break;
+    case 'restart': if (session) startPractice(session.mode, session.src); break;
+    case 'flip': {
+      const f = $('#flip'); if (!f || f.dataset.swiped) return;
+      session.flipped = !session.flipped; f.classList.toggle('flipped', session.flipped); break;
+    }
+    case 'fc-prev': flashMove(-1); break;
+    case 'fc-next': flashMove(1); break;
+    case 'fc-judge': {
+      const s = session; const cw = s.cards[s.i];
+      if (el.dataset.v === '1') { s.known++; if (favs.has(cw.key)) { favs.delete(cw.key); toast('✓ Hafal — dihapus dari Favorit'); } }
+      else { s.unknown++; if (!favs.has(cw.key)) { favs.add(cw.key); toast('★ Ditandai belum hafal'); } }
+      saveFavs(); updateFavBadge(); flashMove(1); break;
+    }
+    case 'answer': answerQuiz(Number(el.dataset.i)); break;
+    case 'q-next': session.i++; renderQuiz(); window.scrollTo(0, 0); break;
+    case 'fav-wrong':
+      session.wrong.forEach(x => favs.add(x.key)); saveFavs(); updateFavBadge();
+      $$('.star').forEach(b => { const on = favs.has(b.dataset.key); b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+      toast(`★ ${session.wrong.length} kata ditandai belum hafal`); break;
+    case 'install':
+      if (deferredInstall) { deferredInstall.prompt(); deferredInstall.userChoice.finally(() => { deferredInstall = null; const s = $('#install-slot'); if (s) s.innerHTML = ''; }); }
+      break;
+    case 'close-ios': store.set('iosTipClosed', true); el.closest('.install').remove(); break;
+  }
+});
+function toggleFav(key) {
+  const on = !favs.has(key);
+  if (on) favs.add(key); else favs.delete(key);
+  saveFavs();
+  toast(on ? '★ Ditandai belum hafal' : 'Dihapus dari Favorit');
+  $$(`.star[data-key="${cssKey(key)}"]`).forEach(b => { b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+  updateFavBadge();
+  if (currentTab === 'fav' && !on) {
+    const y = window.scrollY; renderFav(); window.scrollTo(0, y);
+  }
+}
+
+/* ---------- PWA: manifest, ikon, service worker ---------- */
+function makeIcon(size) {
+  const c = document.createElement('canvas'); c.width = c.height = size;
+  const x = c.getContext('2d');
+  const grd = x.createLinearGradient(0, 0, size, size);
+  grd.addColorStop(0, '#14B8A6'); grd.addColorStop(1, '#0F766E');
+  x.fillStyle = grd; x.fillRect(0, 0, size, size);
+  x.fillStyle = '#FFFFFF';
+  x.font = `800 ${Math.round(size * 0.36)}px "Plus Jakarta Sans", system-ui, sans-serif`;
+  x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillText('Aa', size * 0.5, size * 0.53);
+  x.fillStyle = '#F59E0B';
+  x.beginPath(); x.arc(size * 0.7, size * 0.33, size * 0.055, 0, Math.PI * 2); x.fill();
+  return c.toDataURL('image/png');
+}
+function setupPWA() {
+  try {
+    const i192 = makeIcon(192), i512 = makeIcon(512);
+    const base = location.href.split('#')[0];
+    const manifest = {
+      name: 'KosaKata — Kamus Inggris-Indonesia', short_name: 'KosaKata',
+      description: 'Kamus & latihan kosakata Bahasa Inggris - Indonesia',
+      start_url: base, scope: base.replace(/[^/]*$/, ''), display: 'standalone', orientation: 'portrait',
+      background_color: '#F4F6F8', theme_color: '#0F766E', lang: 'id',
+      icons: [
+        { src: i192, sizes: '192x192', type: 'image/png', purpose: 'any' },
+        { src: i512, sizes: '512x512', type: 'image/png', purpose: 'any' },
+        { src: i512, sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+      ]
+    };
+    const add = (rel, href, extra) => { const l = document.createElement('link'); l.rel = rel; l.href = href; if (extra) Object.assign(l, extra); document.head.appendChild(l); };
+    if (/^https?:$/.test(location.protocol)) {
+      add('manifest', URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' })));
+    }
+    add('apple-touch-icon', makeIcon(180));
+    add('icon', i192, { type: 'image/png' });
+  } catch (e) { /* abaikan */ }
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    // sw.js opsional: letakkan di folder yang sama agar aplikasi bisa dipakai offline.
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+}
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); deferredInstall = e;
+  const s = $('#install-slot'); if (s) s.innerHTML = installCard();
+});
+window.addEventListener('appinstalled', () => { deferredInstall = null; toast('✓ KosaKata terpasang di layar utama'); });
+
+/* ---------- Start ---------- */
+$$('.nav-item .pill').forEach(p => p.insertAdjacentHTML('afterbegin', ic(p.dataset.ic)));
+applyTheme(); applyAccent(); setupPWA(); route();
+})();
+</script>
+</body>
+</html>
