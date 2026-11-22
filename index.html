@@ -370,7 +370,11 @@ mark{background:var(--accent-soft);color:inherit;border-radius:3px;padding:0 1px
 .voice-sim{margin-top:8px;padding:10px 14px;font-size:14px;gap:12px}
 .voice-sim>span:first-child{flex:1}
 .voice-sim small{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:2px;line-height:1.35}
-.voice-guide{margin-top:8px;font-size:13px;line-height:1.5;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface)}
+.voice-fb .mini-lbl{font-size:12.5px;font-weight:700;color:var(--muted);margin:12px 2px 6px}
+.voice-fb .seg button{height:40px;font-size:14px}
+.voice-row .voice-box .seg{margin:0}
+.voice-fb .mini-hint{font-size:12px;color:var(--muted);margin:6px 2px 0;line-height:1.4}
+.voice-guide{margin-top:12px;font-size:13px;line-height:1.5;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface)}
 .voice-guide summary{font-weight:700;cursor:pointer;color:var(--primary)}
 .voice-guide ol{padding-left:18px;margin:8px 0 4px}.voice-guide li{margin:5px 0}.voice-guide p{color:var(--muted);font-size:12px}
 .acc-g{font-size:15px;line-height:1}
@@ -4586,7 +4590,7 @@ if (lastCat && !CAT_BY_ID.has(lastCat.id)) lastCat = null;
 const meta = Object.assign({ lastBackup: 0 }, store.get('meta', {}));
 const settings = Object.assign({
   theme: null, accent: 'US', rate: 0.9, fontScale: 1, goal: 10, voiceLang: 'en',
-  voiceGender: 'f', pitchSim: true, voiceUS: '', voiceUK: '',
+  voiceGender: 'f', voiceUS: '', voiceUK: '', sysUS: 'f', sysUK: 'f', simLvl: 2,
   pMode: 'quiz', pSrc: 'all', pDir: 'en-id', pN: 10, pShuffle: true, pStatus: 'all',
   catStatus: 'all'
 }, store.get('settings', {}));
@@ -4594,6 +4598,9 @@ if (!settings.theme) settings.theme = matchMedia('(prefers-color-scheme: dark)')
 if (!['all', 'fav', 'hard'].includes(settings.pSrc) && !CAT_BY_ID.has(settings.pSrc) && !(String(settings.pSrc).startsWith('grp:') && GROUP_BY_ID.has(settings.pSrc.slice(4)))) settings.pSrc = 'all';
 if (!['all', 'unknown', 'known'].includes(settings.catStatus)) settings.catStatus = 'all';
 if (settings.voiceGender !== 'm') settings.voiceGender = 'f';
+if (settings.sysUS !== 'm') settings.sysUS = 'f';
+if (settings.sysUK !== 'm') settings.sysUK = 'f';
+if (![1, 2, 3].includes(settings.simLvl)) settings.simLvl = 2;
 if (!['all', 'unknown', 'known'].includes(settings.pStatus)) settings.pStatus = 'all';
 if (!['flash', 'quiz', 'listen', 'spell', 'speak'].includes(settings.pMode)) settings.pMode = 'quiz';
 
@@ -4829,7 +4836,7 @@ const VOICE_LOWQ = new Set('eddy flo grandma grandpa reed rocko sandy shelley al
 const VOICE_NOVELTY = /bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|deranged|hysterical/i;
 const ANDROID_CODE = { tpc: 'f', iob: 'f', iog: 'f', tpf: 'f', sfg: 'f', iom: 'm', iol: 'm', tpd: 'm', gba: 'f', gbc: 'f', gbg: 'f', fis: 'f', rjs: 'm', gbb: 'm', gbd: 'm', aua: 'f', auc: 'f', aub: 'm', aud: 'm', afh: 'f', ena: 'f', enc: 'f', end: 'm', ene: 'm' };
 const GOOGLE_NUM = { us: { 1: 'f', 2: 'f', 3: 'm', 4: 'm', 5: 'f', 6: 'm', 7: 'f', 8: 'f' }, uk: { 1: 'm', 2: 'f', 3: 'm', 4: 'f', 5: 'm', 6: 'f', 7: 'f' } };
-const SIM_PITCH_M = 0.72, SIM_PITCH_F = 1.3;
+const SIM_LVLS = { 1: { m: 0.85, f: 1.15 }, 2: { m: 0.72, f: 1.3 }, 3: { m: 0.6, f: 1.45 } };
 function voiceInfo(v) {
   const name = String(v.name || ''), low = name.toLowerCase(), uri = String(v.voiceURI || '').toLowerCase();
   if (VOICE_NOVELTY.test(low)) return { g: '', q: -1, label: name };
@@ -4860,7 +4867,7 @@ function voicesFor(lang) {
   return voices.filter(v => normLang(v.lang) === L && infoOf(v).q >= 0)
     .sort((a, b) => infoOf(b).q - infoOf(a).q || (b.localService === true) - (a.localService === true));
 }
-/* Hasil: { v: voice|null, pitch, how: 'real'|'manual'|'sim'|'none', other: true jika memakai aksen lain } */
+/* Hasil: { v: voice|null, pitch, how: 'real'|'manual'|'system'|'sim', g, known, other: true jika memakai aksen lain } */
 function chooseVoice(gender) {
   const want = gender || settings.voiceGender;
   const lang = ttsLang();
@@ -4870,14 +4877,14 @@ function chooseVoice(gender) {
   if (fixed) { const v = list.find(x => x.name === fixed); if (v) return { v, pitch: 1, how: 'manual', g: infoOf(v).g, other }; }
   const match = list.find(v => infoOf(v).g === want);
   if (match) return { v: match, pitch: 1, how: 'real', g: want, other };
+  // Tidak ada suara dengan gender yang diminta (mis. Chrome Android: 1 suara per aksen).
+  // Gender suara bawaan diambil dari nama suara, atau dari pilihan "Suara bawaan HP" pengguna.
   const v = list.find(x => !infoOf(x).g) || list[0] || null;
   const g0 = v ? infoOf(v).g : '';
-  let pitch = 1;
-  if (settings.pitchSim) {
-    if (want === 'm') pitch = SIM_PITCH_M;
-    else if (g0 === 'm') pitch = SIM_PITCH_F;
-  }
-  return { v, pitch, how: v ? 'sim' : 'none', g: g0, other };
+  const sys = g0 || settings['sys' + settings.accent];
+  if (want === sys) return { v, pitch: 1, how: 'system', g: sys, known: !!g0, other };
+  const lvl = SIM_LVLS[settings.simLvl] || SIM_LVLS[2];
+  return { v, pitch: want === 'm' ? lvl.m : lvl.f, how: 'sim', g: sys, known: !!g0, other };
 }
 if (TTS) {
   loadVoices();
@@ -4912,44 +4919,53 @@ function voiceBoxHTML(compact) {
   const g = settings.voiceGender, acc = settings.accent;
   const list = voicesFor(ttsLang());
   const c = chooseVoice();
-  const gl = g === 'm' ? 'cowok' : 'cewek';
+  const GL = { f: 'cewek', m: 'cowok' };
+  const gl = GL[g];
   const nm = c.v ? esc(infoOf(c.v).label) : 'suara bawaan';
+  const segBtns = (act, opts, cur) => `<div class="seg">${opts.map(([v, l]) => `<button data-act="${act}" data-v="${v}" class="${String(cur) === String(v) ? 'on' : ''}">${l}</button>`).join('')}</div>`;
   let status;
   if (c.how === 'real') status = `✅ Memakai <b>${nm}</b> — suara ${gl} asli.`;
   else if (c.how === 'manual') status = `✅ Memakai <b>${nm}</b> (dipilih manual).`;
-  else if (!voices.length) status = `⏳ Daftar suara belum dimuat browser. Ketuk <b>Tes suara</b> sekali — ${g === 'm' && settings.pitchSim ? 'sementara suara cowok dibuat dengan nada lebih berat.' : 'suara bawaan HP akan dipakai.'}`;
-  else if (g === 'm') status = settings.pitchSim
-    ? `ℹ️ Browser di HP ini tidak menyediakan suara cowok, jadi suara bawaan dibuat <b>lebih berat</b> (simulasi).`
-    : `ℹ️ Browser di HP ini tidak menyediakan suara cowok. Simulasi nada dimatikan, jadi yang terdengar adalah suara bawaan HP.`;
-  else status = c.g === 'm' && settings.pitchSim
-    ? `ℹ️ Tidak ada suara cewek, jadi suara bawaan dibuat <b>lebih ringan</b> (simulasi).`
-    : `ℹ️ Memakai suara bawaan HP (umumnya suara cewek).`;
-  const fallback = c.how === 'sim' || c.how === 'none';
+  else if (c.how === 'system') status = `✅ Memakai <b>suara bawaan HP</b> — suara ${gl} asli dari setelan Text-to-speech HP.`;
+  else status = compact
+    ? `🎛️ Suara ${gl} dibuat dengan ${g === 'm' ? 'menurunkan' : 'menaikkan'} nada suara bawaan HP. Untuk suara ${gl} asli, buka <b>Lainnya…</b>`
+    : `🎛️ Browser ini hanya bisa memakai <b>1 suara per aksen</b>, yaitu suara bawaan HP (saat ini <b>${GL[c.g]}</b>). Jadi suara ${gl} dibuat dengan ${g === 'm' ? 'menurunkan' : 'menaikkan'} nadanya. Mau suara ${gl} asli? Ikuti panduan di bawah.`;
   const opts = list.length >= 2 ? `<div class="select-wrap voice-select"><select id="set-voice" aria-label="Pilih suara">
       <option value="">✨ Otomatis (terbaik)</option>
       ${list.map(v => { const i = infoOf(v); return `<option value="${esc(v.name)}"${settings['voice' + acc] === v.name ? ' selected' : ''}>${i.g === 'm' ? '👨' : i.g === 'f' ? '👩' : '🔈'} ${esc(i.label)}</option>`; }).join('')}
     </select>${ic('chevD')}</div>` : '';
-  return `
-    <div class="voice-status">${status}</div>
-    ${opts}
-    ${fallback ? `<label class="switch-row voice-sim"><span>Simulasi nada otomatis<small>Nada diturunkan/dinaikkan bila suara asli tidak ada</small></span><input type="checkbox" id="set-pitchsim"${settings.pitchSim ? ' checked' : ''}><span class="switch"></span></label>
-      ${compact ? '' : `<details class="voice-guide"><summary>Cara memakai suara cowok/cewek asli di Android</summary>
-        <ol><li>Buka <b>Setelan HP</b> → cari <b>“Text-to-speech”</b> (biasanya di <i>Aksesibilitas</i> atau <i>Bahasa &amp; input</i>).</li>
-        <li>Pilih mesin <b>Speech Services by Google</b> → ketuk ikon ⚙️ → <b>Install voice data</b>.</li>
-        <li>Pilih <b>English (United States)</b> untuk aksen US atau <b>English (United Kingdom)</b> untuk UK, lalu pilih suara cowok/cewek yang kamu suka.</li>
-        <li>Kembali ke aplikasi ini. Jika memilih suara cowok asli, <b>matikan Simulasi nada</b> agar suara tidak terlalu berat.</li></ol>
-        <p>Nama menu bisa sedikit berbeda di tiap merek HP.</p></details>`}` : ''}`;
+  const fb = (c.how === 'system' || c.how === 'sim');
+  let extra = '';
+  if (fb && !compact) {
+    const accName = acc === 'UK' ? 'English (United Kingdom)' : 'English (United States)';
+    extra = `<div class="voice-fb">
+      ${c.known ? '' : `<p class="mini-lbl">Suara bawaan HP untuk aksen ${acc}</p>
+      ${segBtns('set-sys', [['f', '👩 Cewek'], ['m', '👨 Cowok']], c.g)}
+      <p class="mini-hint">Samakan dengan suara ${esc(accName)} yang terpasang di setelan Text-to-speech HP.</p>`}
+      ${c.how === 'sim' ? `<p class="mini-lbl">Kekuatan simulasi suara ${gl}</p>
+      ${segBtns('set-simlvl', [[1, 'Ringan'], [2, 'Sedang'], [3, 'Kuat']], settings.simLvl)}` : ''}
+      <details class="voice-guide"${c.how === 'sim' ? ' open' : ''}><summary>Cara memakai suara cowok/cewek asli di Android</summary>
+        <ol><li>Buka <b>Setelan HP</b> → ketik <b>“Text-to-speech”</b> di kolom cari setelan (biasanya ada di <i>Aksesibilitas</i> atau <i>Manajemen umum → Bahasa</i>).</li>
+        <li>Pilih mesin <b>Speech Services by Google</b> (Layanan Ucapan oleh Google) → ketuk ⚙️ → <b>Install voice data</b> / <b>Instal data suara</b>.</li>
+        <li>Pilih <b>${esc(accName)}</b> → dengarkan pilihan suaranya, lalu pilih suara yang <b>${gl}</b> (unduh dulu jika diminta).</li>
+        <li>Kembali ke aplikasi ini, lalu pada <b>Suara bawaan HP</b> di atas pilih <b>${g === 'm' ? '👨 Cowok' : '👩 Cewek'}</b>. Selesai: suara ${gl} jadi asli, dan suara ${GL[g === 'm' ? 'f' : 'm']} memakai simulasi nada.</li></ol>
+        <p>💡 Trik: suara HP bisa diatur per aksen. Misalnya US = cowok dan UK = cewek, sehingga keduanya terdengar asli. Di HP Samsung, mesin <i>Samsung text-to-speech</i> juga bisa dipakai dengan cara yang sama. Nama menu bisa sedikit berbeda di tiap merek HP.</p></details>
+    </div>`;
+  }
+  return `<div class="voice-status">${status}</div>${opts}${extra}`;
 }
 function refreshVoiceUI() {
-  $$('[data-voice-box]').forEach(el => { el.innerHTML = voiceBoxHTML(el.dataset.voiceBox === 'compact'); });
+  $$('[data-voice-box]').forEach(el => {
+    const d = el.querySelector('details.voice-guide'); const wasOpen = d ? d.open : null;
+    el.innerHTML = voiceBoxHTML(el.dataset.voiceBox === 'compact');
+    const d2 = el.querySelector('details.voice-guide'); if (d2 && wasOpen !== null) d2.open = wasOpen;
+  });
 }
 document.addEventListener('change', e => {
   const t = e.target;
   if (t.id === 'set-voice') {
     settings['voice' + settings.accent] = t.value; saveSettings(); refreshVoiceUI();
     speak('Hello! Nice to meet you.');
-  } else if (t.id === 'set-pitchsim') {
-    settings.pitchSim = t.checked; saveSettings(); refreshVoiceUI(); testVoice();
   }
 });
 function setGender(g) {
@@ -5899,7 +5915,7 @@ function backupData() {
     exportedAt: new Date().toISOString(),
     totalWords: WORDS.length,
     known, favs: Array.from(favs), srs, stats, lastCat,
-    settings: { theme: settings.theme, accent: settings.accent, rate: settings.rate, fontScale: settings.fontScale, goal: settings.goal, voiceLang: settings.voiceLang, voiceGender: settings.voiceGender, pitchSim: settings.pitchSim }
+    settings: { theme: settings.theme, accent: settings.accent, rate: settings.rate, fontScale: settings.fontScale, goal: settings.goal, voiceLang: settings.voiceLang, voiceGender: settings.voiceGender, sysUS: settings.sysUS, sysUK: settings.sysUK, simLvl: settings.simLvl }
   };
 }
 function backupFile() {
@@ -5995,7 +6011,9 @@ function applyImport(mode) {
       if ([5, 10, 20, 30].includes(st.goal)) settings.goal = st.goal;
       if (st.voiceLang === 'en' || st.voiceLang === 'id') settings.voiceLang = st.voiceLang;
       if (st.voiceGender === 'f' || st.voiceGender === 'm') settings.voiceGender = st.voiceGender;
-      if (typeof st.pitchSim === 'boolean') settings.pitchSim = st.pitchSim;
+      if (st.sysUS === 'f' || st.sysUS === 'm') settings.sysUS = st.sysUS;
+      if (st.sysUK === 'f' || st.sysUK === 'm') settings.sysUK = st.sysUK;
+      if ([1, 2, 3].includes(st.simLvl)) settings.simLvl = st.simLvl;
       saveSettings(); applyTheme(); applyAccent(); applyFont();
     }
   } else {
@@ -6184,6 +6202,8 @@ document.addEventListener('click', e => {
     case 'close-sheet': closeSheet(); break;
     case 'test-voice': testVoice(el); break;
     case 'set-gender': setGender(el.dataset.v); break;
+    case 'set-sys': settings['sys' + settings.accent] = el.dataset.v === 'm' ? 'm' : 'f'; saveSettings(); refreshVoiceUI(); testVoice(); break;
+    case 'set-simlvl': settings.simLvl = Number(el.dataset.v) || 2; saveSettings(); refreshVoiceUI(); testVoice(); break;
     case 'set-accent': setAccent(el.dataset.v); speak('Hello, how are you?'); break;
     case 'set-rate':
       settings.rate = Number(el.dataset.v); saveSettings();
